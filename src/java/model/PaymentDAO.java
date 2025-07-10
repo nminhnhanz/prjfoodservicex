@@ -23,7 +23,7 @@ public class PaymentDAO {
     private String GET_ALL = "SELECT Payment_ID, Payment_code, Payment_date, Payment_status,User_ID FROM payment";
     private String GET_BY_USER_ID = "SELECT Payment_ID, Payment_code, Payment_date, Payment_status,User_ID FROM payment WHERE User_ID = ?";
     private String GET_BY_DATE = "SELECT Payment_ID, Payment_code, Payment_date, Payment_status,User_ID FROM payment WHERE Payment_date = ?";
-
+    private String CREATE_PAYMENT = "INSERT INTO Payment (Payment_code,Payment_date,Payment_status,User_ID) VALUES(?,?,?,?)" ;
     public PaymentDAO() {
     }
     
