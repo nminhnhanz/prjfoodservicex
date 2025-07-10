@@ -14,7 +14,7 @@ public class PaymentDTO {
     private int payment_ID;
     private String payment_CODE;
     private Date payment_DATE;
-    private String payment_STATUS;
+    private String payment_STATUS = "Fail"; // "Fail" || "Pending" || "Success" 
     private int userID;
 
     public PaymentDTO() {
