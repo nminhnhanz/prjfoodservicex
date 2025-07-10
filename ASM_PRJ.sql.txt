@@ -9,13 +9,18 @@ GO
 
 -- Food Ordering System Database
 -- Created based on the provided relation model
+-- Modified to combine User and User_Detail tables
 
--- 1. User Table
+-- 1. Combined User Table
 CREATE TABLE [User] (
     User_ID INT IDENTITY(1,1) PRIMARY KEY,
     User_name VARCHAR(255),
     Password VARCHAR(255),
-    Role VARCHAR(50) -- Admin/Manager/Customer
+    Role VARCHAR(50), -- Admin/Manager/Customer
+    User_fullName VARCHAR(255),
+    Phone VARCHAR(20),
+    Address VARCHAR(500),
+    Gender VARCHAR(10)
 );
 
 -- 4. Promotion Table
@@ -35,16 +40,6 @@ CREATE TABLE [Cart] (
     Promote_ID INT,
     User_ID INT,
     FOREIGN KEY (Promote_ID) REFERENCES [Promotion](Promote_ID),
-    FOREIGN KEY (User_ID) REFERENCES [User](User_ID)
-);
-
--- 3. User_Detail Table
-CREATE TABLE [User_Detail] (
-    User_ID INT IDENTITY(1,1) PRIMARY KEY,
-    User_fullName VARCHAR(255),
-    Phone VARCHAR(20),
-    Address VARCHAR(500),
-    Gender VARCHAR(10),
     FOREIGN KEY (User_ID) REFERENCES [User](User_ID)
 );
 
@@ -202,21 +197,13 @@ INSERT INTO [Menu] (Menu_ID, Food, Image, Price, Food_description, Food_status, 
 (21, 'Cocacola', '', 12000.00, 'Cocacola nguyên chất', 'Ready to serve', 4),
 (22, 'Trà chanh', '', 15000.00, 'Trà chanh tươi mát', 'Ready to serve', 4);
 
--- Insert Users
-INSERT INTO [User] (User_name, Password, Role) VALUES
-('admin', 'admin123', 'Admin'),
-('manager1', 'manager123', 'Manager'),
-('customer1', 'customer123', 'Customer'),
-('customer2', 'customer456', 'Customer'),
-('customer3', 'customer789', 'Customer');
-
--- Insert User Details
-INSERT INTO [User_Detail] (User_fullName, Phone, Address, Gender) VALUES
-('Nguyễn Văn Admin', '0901234567', '123 Đường Lê Lợi, Quận 1, TP.HCM', 'Male'),
-('Trần Thị Manager', '0912345678', '456 Đường Nguyễn Huệ, Quận 1, TP.HCM', 'Female'),
-('Lê Văn Khách', '0923456789', '789 Đường Trần Hưng Đạo, Quận 5, TP.HCM', 'Male'),
-('Phạm Thị Lan', '0934567890', '101 Đường Cách Mạng Tháng 8, Quận 3, TP.HCM', 'Female'),
-('Hoàng Minh Tuấn', '0945678901', '202 Đường Võ Văn Tần, Quận 3, TP.HCM', 'Male');
+-- Insert Combined User Data
+INSERT INTO [User] (User_name, Password, Role, User_fullName, Phone, Address, Gender) VALUES
+('admin', 'admin123', 'Admin', 'Nguyễn Văn Admin', '0901234567', '123 Đường Lê Lợi, Quận 1, TP.HCM', 'Male'),
+('manager1', 'manager123', 'Manager', 'Trần Thị Manager', '0912345678', '456 Đường Nguyễn Huệ, Quận 1, TP.HCM', 'Female'),
+('customer1', 'customer123', 'Customer', 'Lê Văn Khách', '0923456789', '789 Đường Trần Hưng Đạo, Quận 5, TP.HCM', 'Male'),
+('customer2', 'customer456', 'Customer', 'Phạm Thị Lan', '0934567890', '101 Đường Cách Mạng Tháng 8, Quận 3, TP.HCM', 'Female'),
+('customer3', 'customer789', 'Customer', 'Hoàng Minh Tuấn', '0945678901', '202 Đường Võ Văn Tần, Quận 3, TP.HCM', 'Male');
 
 -- Insert Promotions
 INSERT INTO [Promotion] (Promote_ID, Promote_code, Value, Time_valid, User_ID) VALUES
