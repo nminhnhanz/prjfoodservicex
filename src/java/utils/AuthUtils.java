@@ -1,9 +1,17 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import model.UserDTO;
 
+/**
+ *
+ * @author Admin
+ */
 public class AuthUtils {
     public static UserDTO getCurrentUser(HttpServletRequest request){
         HttpSession session = request.getSession();
@@ -49,4 +57,3 @@ public class AuthUtils {
     }
     
 }
-
