@@ -7,34 +7,37 @@ import model.UserDTO;
 public class AuthUtils {
     public static UserDTO getCurrentUser(HttpServletRequest request){
         HttpSession session = request.getSession();
-        if(session!=null){
+        if(session != null){
             return (UserDTO) session.getAttribute("user");
         }
         return null;
     }
     
     public static boolean isLoggedIn(HttpServletRequest request){
-        return getCurrentUser(request)!=null;
+        return getCurrentUser(request) != null;
     }
     
     public static boolean hasRole(HttpServletRequest request, String role){
         UserDTO user = getCurrentUser(request);
-        if(user!=null){
-            return user.getRoleID().equals(role);
+        if(user != null){
+            return user.getRole().equals(role);
         }
         return false;
     }
     
     public static boolean isAdmin(HttpServletRequest request){
-        return hasRole(request, "AD");
+        return hasRole(request, "Admin");
+        
     }
     
     public static boolean isManager(HttpServletRequest request){
-        return hasRole(request, "MA");
+        return hasRole(request, "Manager");
+        
     }
     
-    public static boolean isUser(HttpServletRequest request){
-        return hasRole(request, "MB");
+    public static boolean isCustomer(HttpServletRequest request){
+        return hasRole(request, "Customer");
+        
     }
     
     public static String getLoginURL(){
@@ -42,6 +45,8 @@ public class AuthUtils {
     }
     
     public static String getAccessDeniedMessage(String action){
-        return "You can not access to "+action+". Please contact administrator.";
+        return "You cannot access to "+action+". Please contact Admin.";
     }
+    
 }
+
