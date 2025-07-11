@@ -95,5 +95,8 @@ public class UserDTO {
 
     public void setGender(String gender) {
         this.gender = gender;
-    }   
+    }
+    
+    
+    
 }
