@@ -23,7 +23,7 @@
                 
         %>
         
-        <form action="MainController" method="post">
+        <form action="UserController" method="post">
             <h1>LOGIN</h1>
             <input type="hidden" name="action" value="login" />
             UserName:<input type="text" name="user_name" value="" /> <br>

@@ -3,10 +3,21 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/login.jsp</file>
+            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/error.jsp</file>
+            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/utils/PasswordUtils.java</file>
+            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/customer/customerPurchaseHistory.jsp</file>
+            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/index.html</file>
+            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/controller/UserController.java</file>
+            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/Filter/managerFilter.java</file>
+            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/register.jsp</file>
+            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/Filter/customerFilter.java</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/utils/DbUtils.java</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/utils/AuthUtils.java</file>
-            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/utils/PasswordUtils.java</file>
+            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/model/MenuDAO.java</file>
+            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/welcome.jsp</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/model/PaymentDAO.java</file>
+            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/menuForm.jsp</file>
         </group>
     </open-files>
 </project-private>
