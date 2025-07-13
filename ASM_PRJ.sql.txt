@@ -297,3 +297,27 @@ INSERT INTO [Purchase] (User_ID, Menu_ID) VALUES
 (5, 3),
 (5, 6),
 (5, 15);
+
+ALTER TABLE [User]
+ADD Email VARCHAR(255);
+
+-- Update existing users with sample email addresses
+UPDATE [User] 
+SET Email = 'admin@foodorder.com'
+WHERE User_name = 'admin';
+
+UPDATE [User] 
+SET Email = 'manager1@foodorder.com'
+WHERE User_name = 'manager1';
+
+UPDATE [User] 
+SET Email = 'customer1@email.com'
+WHERE User_name = 'customer1';
+
+UPDATE [User] 
+SET Email = 'customer2@email.com'
+WHERE User_name = 'customer2';
+
+UPDATE [User] 
+SET Email = 'customer3@email.com'
+WHERE User_name = 'customer3';
