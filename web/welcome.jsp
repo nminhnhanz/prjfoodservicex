@@ -4,15 +4,10 @@
     Author     : Admin
 --%>
 
-<%-- 
-    Document   : welcome
-    Created on : Jul 9, 2025, 9:40:18 PM
-    Author     : Admin
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="model.UserDTO" %>
 <%@page import="model.MenuDTO" %>
+<%@page import="model.CategoryDTO" %>
 <%@page import="java.util.List" %>
 <%@page import="utils.AuthUtils" %>
 <!DOCTYPE html>
@@ -20,15 +15,21 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Welcome Page</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
     </head>
     <body>
+        <!-- Include Header -->
+        <%@include file="Header.jsp" %>
+        
         <%
             if(AuthUtils.isLoggedIn(request)){
                 UserDTO user = AuthUtils.getCurrentUser(request);
                 String keyword = (String) request.getAttribute("keyword");
+                String selectedCategoryId = (String) request.getAttribute("selectedCategoryId");
                 
                 // Nếu chưa có list trong request thì load tất cả menu
                 List<MenuDTO> list = (List<MenuDTO>)request.getAttribute("list");
+                List<CategoryDTO> categories = (List<CategoryDTO>)request.getAttribute("categories");
                 if(list == null){
                     // Redirect để load tất cả menu
                     response.sendRedirect("MenuController?action=loadAllMenu");
@@ -36,131 +37,169 @@
                 }
         %>
         
-        <h1>
-        <%
-            if(AuthUtils.isAdmin(request) || AuthUtils.isManager(request)) {
-        %>
-            Xin chào <%=user.getUser_fullName()%>
-        <%
-            } else if(AuthUtils.isCustomer(request)) {
-        %>
-            Kính chào khách hàng <%=user.getUser_fullName()%>
-        <%
-            }
-        %>
-        </h1>
-        <a href="MainController?action=logout">Logout</a>
-        
-        <!-- Hiển thị thông báo -->
-        <%
-            String message = (String) request.getAttribute("message");
-            String error = (String) request.getAttribute("error");
-            if(message != null){
-        %>
-            <div style="color: green; margin: 10px 0;">
-                <strong><%=message%></strong>
-            </div>
-        <%
-            }
-            if(error != null){
-        %>
-            <div style="color: red; margin: 10px 0;">
-                <strong><%=error%></strong>
-            </div>
-        <%
-            }
-        %>
-        
-        <div style="margin: 20px 0;">
-            <!-- Form search để filter menu -->
-            <form action="MenuController" method="post" style="display: inline;">
-                <input type="hidden" name="action" value="searchMenu"/>
-                <label>Search Menu:</label>
-                <input type="text" name="keyword" value="<%=keyword!=null?keyword:""%>" placeholder="Enter menu name..."/>
-                <input type="submit" value="Search"/>
-            </form>
-            
-            <!-- Nút để hiển thị tất cả menu -->
-            <a href="MenuController?action=loadAllMenu" style="margin-left: 10px;">Show All Menu</a>
-            
-            <% if(AuthUtils.isAdmin(request)){ %>
-                <a href="menuForm.jsp" style="margin-left: 10px;">Add Menu</a>
+        <!-- Main Content -->
+        <div class="container mt-4">
+            <%
+                if(list != null && list.isEmpty()){
+            %>
+                <div class="alert alert-info">
+                    <h3>No Menus found</h3>
+                    <% if(keyword != null && !keyword.trim().isEmpty()){ %>
+                        <p>No Menus have name matching with the keyword: "<strong><%=keyword%></strong>"</p>
+                    <% } %>
+                    <% if(selectedCategoryId != null && !selectedCategoryId.equals("0")){ %>
+                        <%
+                            // Tìm tên category để hiển thị
+                            String categoryName = "";
+                            if(categories != null){
+                                for(CategoryDTO category : categories){
+                                    if(String.valueOf(category.getCategory_ID()).equals(selectedCategoryId)){
+                                        categoryName = category.getCategory_name();
+                                        break;
+                                    }
+                                }
+                            }
+                        %>
+                        <p>No Menus found in category: "<strong><%=categoryName%></strong>"</p>
+                    <% } %>
+                    <a href="MenuController?action=loadAllMenu" class="btn btn-primary">View All Menu</a>
+                </div>
+            <%
+                } else if(list != null && !list.isEmpty()){
+            %>
+                <% 
+                    String displayTitle = "All Menu";
+                    if(keyword != null && !keyword.trim().isEmpty() && selectedCategoryId != null && !selectedCategoryId.equals("0")){
+                        // Tìm tên category
+                        String categoryName = "";
+                        if(categories != null){
+                            for(CategoryDTO category : categories){
+                                if(String.valueOf(category.getCategory_ID()).equals(selectedCategoryId)){
+                                    categoryName = category.getCategory_name();
+                                    break;
+                                }
+                            }
+                        }
+                        displayTitle = "Search Results for \"" + keyword + "\" in category \"" + categoryName + "\"";
+                    } else if(keyword != null && !keyword.trim().isEmpty()){
+                        displayTitle = "Search Results for \"" + keyword + "\"";
+                    } else if(selectedCategoryId != null && !selectedCategoryId.equals("0")){
+                        // Tìm tên category
+                        String categoryName = "";
+                        if(categories != null){
+                            for(CategoryDTO category : categories){
+                                if(String.valueOf(category.getCategory_ID()).equals(selectedCategoryId)){
+                                    categoryName = category.getCategory_name();
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                %>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4><%=displayTitle%></h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-hover">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Food</th>
+                                                <th>Image</th>
+                                                <th>Price</th>
+                                                <th>Description</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                                <% if(AuthUtils.isAdmin(request)){ %>
+                                                <th>Admin Actions</th>
+                                                <% } %>
+                                                <th>Feedback</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% for(MenuDTO m : list) { %>
+                                            <tr>
+                                                <td><%=m.getFood()%></td>
+                                                <td><%=m.getImage()%></td>
+                                                <td><%=m.getPrice()%></td>
+                                                <td><%=m.getFood_description()%></td>
+                                                <td>
+                                                    <span class="badge bg-<%=m.getFood_status().equals("Active") ? "success" : "danger"%>">
+                                                        <%=m.getFood_status()%>
+                                                    </span>
+                                                </td>
+                                                <td>   
+                                                    <form action="MainController" method="post" style="display: inline;">
+                                                        <input type="hidden" name="action" value="goToOrder" />
+                                                        <input type="hidden" name="menu_ID" value="<%= m.getMenu_id()%>" />
+                                                        <button type="submit" class="btn btn-primary btn-sm">
+                                                            <i class="fas fa-shopping-cart"></i> Order
+                                                        </button>
+                                                    </form>
+                                                </td>
+                                                
+                                                <% if(AuthUtils.isAdmin(request)){ %>
+                                                <td>
+                                                    <form action="MenuController" method="post" style="display: inline;">
+                                                        <input type="hidden" name="action" value="editMenu"/>
+                                                        <input type="hidden" name="menuId" value="<%=m.getMenu_id()%>"/>
+                                                        <input type="hidden" name="keyword" value="<%=keyword!=null?keyword:""%>" />
+                                                        <input type="hidden" name="categoryId" value="<%=selectedCategoryId!=null?selectedCategoryId:""%>" />
+                                                        <button type="submit" class="btn btn-warning btn-sm">
+                                                            <i class="fas fa-edit"></i> Edit
+                                                        </button>
+                                                    </form>
+                                                    <form action="MenuController" method="post" style="display: inline; margin-left: 5px;">
+                                                        <input type="hidden" name="action" value="deleteMenu"/>
+                                                        <input type="hidden" name="menuId" value="<%=m.getMenu_id()%>"/>
+                                                        <input type="hidden" name="keyword" value="<%=keyword!=null?keyword:""%>" />
+                                                        <input type="hidden" name="categoryId" value="<%=selectedCategoryId!=null?selectedCategoryId:""%>" />
+                                                        <button type="submit" class="btn btn-danger btn-sm"
+                                                               onclick="return confirm('Are you sure you want to delete this menu: <%=m.getFood()%>?')">
+                                                            <i class="fas fa-trash"></i> Delete
+                                                        </button>
+                                                    </form>                                 
+                                                </td>
+                                                <% } %>
+                                                <td>
+                                                    <form action="MainController" method="post" style="display:inline;">
+                                                        <input type="hidden" name="action" value="viewFeedbackByMenu" />
+                                                        <input type="hidden" name="menu_ID" value="<%= m.getMenu_id() %>" />
+                                                        <input type="submit" value="View Feedback" />
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                            <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             <% } %>
         </div>
-                
-        <%
-            if(list != null && list.isEmpty()){
-        %>
-            <h3>No Menus found</h3>
-            <% if(keyword != null && !keyword.trim().isEmpty()){ %>
-                <p>No Menus have name matching with the keyword: "<strong><%=keyword%></strong>"</p>
-                <a href="MenuController?action=loadAllMenu">View All Menus</a>
-            <% } else { %>
-                <p>No Menus available in the system.</p>
-            <% } %>
-        <%
-            } else if(list != null && !list.isEmpty()){
-        %>
-            <% if(keyword != null && !keyword.trim().isEmpty()){ %>
-                <h3>Search Results for: "<strong><%=keyword%></strong>" (<%=list.size()%> found)</h3>
-            <% } else { %>
-                <h3>All Menus (<%=list.size()%> items)</h3>
-            <% } %>
-        
-            <table>
-                <thead>
-                    <tr>
-                        <th>Food</th>
-                        <th>Image</th>
-                        <th>Price</th>
-                        <th>Description</th>
-                        <th>Status</th>
-                        
-                        <% if(AuthUtils.isAdmin(request)){ %>
-                        <th style="padding: 10px;">Action</th>
-                        <% } %>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% for(MenuDTO m : list) { %>
-                    <tr>
-                        <td style="padding: 8px;"><%=m.getFood()%></td>
-                        <td style="padding: 8px;"><%=m.getImage()%></td>
-                        <td style="padding: 8px; text-align: right;"><%=m.getPrice()%></td>
-                        <td style="padding: 8px;"><%=m.getFood_description()%></td>
-                        <td style="padding: 8px; text-align: center;">
-                            <span style="color: <%=m.getFood_status().equals("Active") ? "green" : "red"%>;">
-                                <%=m.getFood_status()%>
-                            </span>
-                        </td>
-                        
-                        <% if(AuthUtils.isAdmin(request)){ %>
-                        <td style="padding: 8px; text-align: center;">
-                            <form action="MenuController" method="post" style="display: inline;">
-                                <input type="hidden" name="action" value="editMenu"/>
-                                <input type="hidden" name="menuId" value="<%=m.getMenu_id()%>"/>
-                                <input type="hidden" name="keyword" value="<%=keyword!=null?keyword:""%>" />
-                                <input type="submit" value="Edit" style="background-color: #4CAF50; color: white; padding: 5px 10px; border: none; cursor: pointer;"/>
-                            </form>
-                            <form action="MenuController" method="post" style="display: inline; margin-left: 5px;">
-                                <input type="hidden" name="action" value="deleteMenu"/>
-                                <input type="hidden" name="menuId" value="<%=m.getMenu_id()%>"/>
-                                <input type="hidden" name="keyword" value="<%=keyword!=null?keyword:""%>" />
-                                <input type="submit" value="Delete" 
-                                       style="background-color: #f44336; color: white; padding: 5px 10px; border: none; cursor: pointer;"
-                                       onclick="return confirm('Are you sure you want to delete this menu: <%=m.getFood()%>?')"/>
-                            </form>
-                        </td>
-                        <% } %>
-                    </tr>
-                    <% } %>
-                </tbody>
-            </table>
-        <% } %>
             
         <% } else { %>
-            <h2>Please login to view menu</h2>
-            <a href="login.jsp">Login</a>
+            <div class="container mt-5">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                <h2>Please login to view menu</h2>
+                                <a href="login.jsp" class="btn btn-primary">Login</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         <% } %>
+        
+        <!-- Include Footer -->
+        <%@include file="Footer.jsp" %>
     </body>
 </html>

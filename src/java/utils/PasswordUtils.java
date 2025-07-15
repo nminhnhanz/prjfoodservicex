@@ -8,8 +8,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import model.UserDAO;
-import model.UserDTO;
+import model.dao.UserDAO;
+import model.dto.UserDTO;
 
 /**
  *

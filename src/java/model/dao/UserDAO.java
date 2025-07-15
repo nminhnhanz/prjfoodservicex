@@ -2,15 +2,15 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package model;
+package model.dao;
 
+import model.dto.UserDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import utils.DbUtils;
-import java.sql.Statement;
 
 /**
  *
@@ -34,7 +34,7 @@ public class UserDAO {
     
     public List<UserDTO> getAllUsers(){
         List<UserDTO> userList = new ArrayList<>();
-        String sql = "SELECT user_ID, user_name, password, role, user_fullName, phone, address, gender from [User]";
+        String sql = "SELECT user_ID, user_name, password, role, user_fullName, phone, address, gender, email from [User]";
 
         try {
             Connection conn = DbUtils.getConnection();
@@ -51,6 +51,7 @@ public class UserDAO {
                 user.setPhone(rs.getString("phone"));
                 user.setAddress(rs.getString("address"));
                 user.setGender(rs.getString("gender"));
+                user.setEmail(rs.getString("email"));
                 
                 userList.add(user);
             }
@@ -67,7 +68,7 @@ public class UserDAO {
     
     public UserDTO getUserByID(int id){
         UserDTO user = null;
-        String sql = "SELECT user_ID, user_name, password, role, user_fullName, phone, address, gender from [User] WHERE user_ID = ?";
+        String sql = "SELECT user_ID, user_name, password, role, user_fullName, phone, address, gender, email from [User] WHERE user_ID = ?";
 
         try {
             Connection conn = DbUtils.getConnection();
@@ -84,8 +85,9 @@ public class UserDAO {
                 String phone = rs.getString("phone");
                 String address = rs.getString("address");
                 String gender = rs.getString("gender");
+                String email = rs.getString("email");
                 
-                user = new UserDTO(user_ID, user_name, password, role, user_fullName, phone, address, gender);
+                user = new UserDTO(user_ID, user_name, password, role, user_fullName, phone, address, gender, email);
             }
             
         } catch (Exception e) {
@@ -97,7 +99,7 @@ public class UserDAO {
     
     public UserDTO getUserByName(String name){
         UserDTO user = null;
-        String sql = "SELECT user_ID, user_name, password, role, user_fullName, phone, address, gender from [User] WHERE user_name = ?";
+        String sql = "SELECT user_ID, user_name, password, role, user_fullName, phone, address, gender, email from [User] WHERE user_name = ?";
         try {
             Connection conn = DbUtils.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -113,8 +115,9 @@ public class UserDAO {
                 String phone = rs.getString("phone");
                 String address = rs.getString("address");
                 String gender = rs.getString("gender");
+                String email = rs.getString("email");
 
-                user = new UserDTO(user_ID, user_name, password, role, user_fullName, phone, address, gender);
+                user = new UserDTO(user_ID, user_name, password, role, user_fullName, phone, address, gender, email);
             }
 
         } catch (Exception e) {
@@ -126,7 +129,7 @@ public class UserDAO {
     }
 
     public boolean insertUser(UserDTO user) {
-        String sql = "INSERT INTO [User](user_name, password, role, user_fullName, phone, address, gender) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO [User](user_name, password, role, user_fullName, phone, address, gender, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
             Connection conn = DbUtils.getConnection();
@@ -140,6 +143,7 @@ public class UserDAO {
             ps.setString(5, user.getPhone());
             ps.setString(6, user.getAddress());
             ps.setString(7, user.getGender());
+            ps.setString(8, user.getEmail());
 
             int rowAffected = ps.executeUpdate();
             return rowAffected > 0;
@@ -155,7 +159,7 @@ public class UserDAO {
 
     
     public UserDTO checkLogin(String user_name, String password){
-        String sql = "SELECT user_ID, user_name, password, role, user_fullName, phone, address, gender from [User] WHERE user_name = ? and password = ?";
+        String sql = "SELECT user_ID, user_name, password, role, user_fullName, phone, address, gender, email from [User] WHERE user_name = ? and password = ?";
 
         try {
             Connection conn = DbUtils.getConnection();
@@ -174,6 +178,7 @@ public class UserDAO {
                 user.setPhone(rs.getString("phone"));
                 user.setAddress(rs.getString("address"));
                 user.setGender(rs.getString("gender"));
+                user.setEmail(rs.getString("email"));
                 
                 return user;
                 
