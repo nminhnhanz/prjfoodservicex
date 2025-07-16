@@ -57,11 +57,13 @@ public class MainController extends HttpServlet {
                 || "submitFeedback".equals(action)
                 || "viewFeedbackByMenu".equals(action);
     }
-
+    private boolean isPaymentAction(String action){
+        return "createPay".equals(action);
+    }
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
+        
         String url = WELCOME;
         try {
             String action = request.getParameter("action");
@@ -79,6 +81,8 @@ public class MainController extends HttpServlet {
                 url = "/TotalPriceController";
             }else if(isFeedbackAction(action)){
                 url = "/FeedbackController";
+            }else if (isPaymentAction(action)){
+                url = "/PaymentController";
             }
 
         } catch (Exception e) {

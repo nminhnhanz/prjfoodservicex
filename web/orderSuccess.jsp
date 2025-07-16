@@ -86,7 +86,7 @@
             
             <div>
                 <a href="MainController?action=goToFeedback&menu_ID=<%=order.getMenu_ID() %>">Give Feedback</a>
-                <a href="cart.jsp">See your cart</a>
+                <a href="MainController?action=sumMoney&type=cart&id=null">See your cart</a>
                 <a href="MainController?action=searchMenu">Continue to order</a>
             </div>
             

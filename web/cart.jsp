@@ -5,7 +5,7 @@
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
-<%@ page import="model.OrderDTO" %>
+<%@ page import="model.dto.OrderDTO" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -71,13 +71,7 @@
                                 }
                             %>
                             
-                            <form action="TotalPriceController" method="get">
-                                <input type="hidden" name="action" value="sumMoney" />
-                                <input type="hidden" name="type" value="cart" />
-                                <input type="hidden" name="id" value="<%= request.getAttribute("cartId") != null ? request.getAttribute("cartId") : session.getAttribute("cartId") %>" />
-                                <input type="submit" value="Tính tổng tiền" class="calculate-btn" />
-                            </form>
-                                
+                                                            
                             <%
                                 String formattedTotal = (String) request.getAttribute("formattedTotal");
                                 if (formattedTotal == null) {
@@ -90,7 +84,11 @@
                             <%
                             }
                             %>
-                            
+                            <form action="MainController" method="get">
+                                <input type="hidden" name="action" value="createPayment" />
+                                <input type="submit" value="Mua" class="calculate-btn" />
+                            </form>
+
                             <a href="MainController?action=searchMenu" class="continue-link">Continue to order</a>
                         </div>
                         <% } %>
