@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="model.UserDTO" %>
+<%@page import="model.dto.UserDTO" %>
 <%@page import="utils.AuthUtils" %>
 
 <style>

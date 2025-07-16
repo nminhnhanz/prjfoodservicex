@@ -5,7 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="model.MenuDTO" %>
+<%@page import="model.dto.MenuDTO" %>
 
 
 <!DOCTYPE html>

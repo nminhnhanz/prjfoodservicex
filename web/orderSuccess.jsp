@@ -4,7 +4,7 @@
     Author     : Admin
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ page import="model.OrderDTO" %>
+<%@ page import="model.dto.OrderDTO" %>
 <%@ page import="java.util.List" %>
     <%
         OrderDTO order = (OrderDTO) request.getAttribute("order");

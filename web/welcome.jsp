@@ -5,9 +5,9 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="model.UserDTO" %>
-<%@page import="model.MenuDTO" %>
-<%@page import="model.CategoryDTO" %>
+<%@page import="model.dto.UserDTO" %>
+<%@page import="model.dto.MenuDTO" %>
+<%@page import="model.dto.CategoryDTO" %>
 <%@page import="java.util.List" %>
 <%@page import="utils.AuthUtils" %>
 <!DOCTYPE html>
@@ -124,7 +124,7 @@
                                             <% for(MenuDTO m : list) { %>
                                             <tr>
                                                 <td><%=m.getFood()%></td>
-                                                <td><%=m.getImage()%></td>
+                                                <td><img src="<%=m.getImage()%>" width="100" height="100""></td>
                                                 <td><%=m.getPrice()%></td>
                                                 <td><%=m.getFood_description()%></td>
                                                 <td>

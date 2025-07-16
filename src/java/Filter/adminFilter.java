@@ -24,7 +24,7 @@ import utils.AuthUtils;
  *
  * @author Nghia
  */
-@WebFilter(filterName = "adminFilter", urlPatterns = {"/admin"}, dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD})
+@WebFilter(filterName = "adminFilter", urlPatterns = {"/admin/*"}, dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD})
 public class adminFilter implements Filter {
 
     private static final boolean debug = true;
@@ -72,7 +72,7 @@ public class adminFilter implements Filter {
         if (AuthUtils.isLoggedIn(httpRequest) && AuthUtils.isAdmin(httpRequest)) {
             request.getRequestDispatcher("admin/").forward(request, response);
         } else {
-            request.setAttribute("msgError", "You are not logged in or do not have suitable role for this content!");
+            request.setAttribute("checkError", "You are not logged in or do not have suitable role for this content!");
             request.getRequestDispatcher("../error.jsp").forward(request, response);
         }
 

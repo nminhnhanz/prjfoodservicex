@@ -3,7 +3,7 @@
     Created on : Jul 12, 2025, 9:35:16 AM
     Author     : Admin
 --%>
-<%@ page import="model.MenuDTO" %>
+<%@ page import="model.dto.MenuDTO" %>
     
 <!DOCTYPE html>
 <html>

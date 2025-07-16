@@ -44,7 +44,7 @@ public class customerFilter implements Filter {
             request.getRequestDispatcher("customer/").forward(request, response);
         }
         else {
-            request.setAttribute("msgError", "You are not logged in or do not have suitable role for this content!");
+            request.setAttribute("checkError", "You are not logged in or do not have suitable role for this content!");
             request.getRequestDispatcher("../error.jsp").forward(request, response);
         }
     }

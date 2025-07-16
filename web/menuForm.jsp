@@ -5,9 +5,9 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="model.UserDTO" %>
+<%@page import="model.dto.UserDTO" %>
 <%@page import="utils.AuthUtils" %>
-<%@page import="model.MenuDTO" %>
+<%@page import="model.dto.MenuDTO" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -21,7 +21,7 @@
     </head>
     <body>
         <%@include file="Header.jsp" %>
-        
+
         <%
                 if (AuthUtils.isAdmin(request)) {
                     String checkError = (String)request.getAttribute("checkError");
@@ -30,18 +30,18 @@
                     Boolean isEdit = (Boolean)request.getAttribute("isEdit") != null;
                     String keyword = (String)request.getAttribute("keyword");
                 
-            %>
-        
+        %>
+
         <div class="container-fluid">
             <div class="menu-form-container">
                 <div class="menu-form-header">
                     <h1><%=isEdit ? "EDIT MENU" : "ADD MENU"%></h1>              
                 </div>
-                
+
                 <div class="menu-form">
-                    <form action="MainController" method="post">
+                    <form action="MenuController" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="action" value="<%=isEdit ? "updateMenu" : "addMenu"%>" />
-                        
+
                         <!-- Menu ID -->
                         <div class="form-group">
                             <label for="menu_id" class="form-label">Menu ID <span class="required">*</span></label>
@@ -59,14 +59,8 @@
                                    value="<%=menu != null ? menu.getFood() : "" %>" />
                         </div>
 
-                        <!-- Image -->
-                        <div class="form-group">
-                            <label for="image" class="form-label">Image URL</label>
-                            <input type="text" id="image" name="image" 
-                                   class="form-control" 
-                                   value="<%=menu != null ? menu.getImage() : "" %>" />
-                        </div>
-
+                  
+                 
                         <!-- Price -->
                         <div class="form-group">
                             <label for="price" class="form-label">Price <span class="required">*</span></label>
@@ -101,6 +95,12 @@
                                    class="form-control" 
                                    value="<%=menu != null ? menu.getCategory_id() : "" %>" />
                         </div>
+                        <!-- Image -->
+                        <div class="form-group">
+                            <label for="image" class="form-label">Image</label>
+                            <input type="file" id="image" name="FoodImage" class="form-control" />
+                            <input type="hidden" name="currentImage" value="<%=menu != null ? menu.getImage() : "" %>" />
+                        </div>
 
                         <div class="form-buttons"> 
                             <input type="hidden" name="keyword" value="<%=keyword!=null?keyword:""%>" />
@@ -109,7 +109,7 @@
                             <a href="welcome.jsp" class="back-link">← Back to Menus</a>
                         </div>             
                     </form>
-                    
+
                     <% if(checkError != null && !checkError.isEmpty()) { %>
                     <div class="alert-message alert-error"><%=checkError%></div>
                     <% } else if(menuMessage != null&& !menuMessage.isEmpty()) { %>
@@ -118,7 +118,7 @@
                 </div>
             </div>
         </div>
-        
+
         <%}else{%>
         <div class="container-fluid">
             <div class="access-denied-container">
@@ -129,9 +129,9 @@
             </div>
         </div>
         <%}%>
-        
+
         <%@include file="Footer.jsp" %>
-        
+
         <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     </body>
