@@ -59,34 +59,38 @@ public class MainController extends HttpServlet {
                 || "submitFeedback".equals(action)
                 || "viewFeedbackByMenu".equals(action);
     }
-    private boolean isPaymentAction(String action){
+
+    private boolean isPaymentAction(String action) {
         return "createPay".equals(action);
     }
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
+
         String url = WELCOME;
         try {
             String action = request.getParameter("action");
-             System.out.println(action);
+            System.out.println(action);
 
             if (isUserAction(action)) {
                 url = "/UserController";
-            } else if (isMenuAction(action)) {
-                url = "/MenuController";
-            } else if (isCategoryAction(action)) {
-                url = "/CategoryController";
-            } else if (isOrderAction(action)) {
-                url = "/OrderController";
-            } else if (isCartAction(action)) {
-                url = "/CartController";
-            } else if (isTotalPrice(action)) {
-                url = "/TotalPriceController";
-            }else if(isFeedbackAction(action)){
-                url = "/FeedbackController";
-            }else if (isPaymentAction(action)){
-                url = "/PaymentController";
+            } else if (utils.AuthUtils.isLoggedIn(request)) {
+                if (isMenuAction(action)) {
+                    url = "/MenuController";
+                } else if (isCategoryAction(action)) {
+                    url = "/CategoryController";
+                } else if (isOrderAction(action)) {
+                    url = "/OrderController";
+                } else if (isCartAction(action)) {
+                    url = "/CartController";
+                } else if (isTotalPrice(action)) {
+                    url = "/TotalPriceController";
+                } else if (isFeedbackAction(action)) {
+                    url = "/FeedbackController";
+                } else if (isPaymentAction(action)) {
+                    url = "/PaymentController";
+                }
             }
 
         } catch (Exception e) {

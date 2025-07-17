@@ -4,6 +4,7 @@
  */
 package controller;
 
+import com.sun.org.apache.bcel.internal.Constants;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -117,7 +118,7 @@ public class CartController extends HttpServlet {
         List<MenuDTO> menuList = (List<MenuDTO>) request.getAttribute("menuList");
         for (CartDTO item : cartItemList) {
             MenuDTO menu = mDAO.getMenuByID(item.getMenu_ID());
-            sum = sum.add(menu.getPrice());
+            sum = sum.add(menu.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())));
         }
         request.setAttribute("cartSum", sum);
         return "cart.jsp";
@@ -126,11 +127,11 @@ public class CartController extends HttpServlet {
     private String updateCart(HttpServletRequest request, HttpServletResponse response) {
         int UserID = currentUser.getUser_ID();
         for (CartDTO c : cDAO.getCartByUserID(UserID)){
-            int newQuantity = Integer.parseInt(request.getParameter("menuId" +
-                                                                    String.valueOf(c.getMenu_ID())));
+            int newQuantity = Integer.parseInt(request.getParameter("quantity"+String.valueOf(c.getMenu_ID())));
             cDAO.updateCartQuantity(UserID, c.getMenu_ID(), newQuantity);
-        }
-        return "cart.jsp";
+            System.out.println(newQuantity);
+        }   
+        return "MainController?action=getCart";
     }
 
 }

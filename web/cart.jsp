@@ -140,91 +140,89 @@
         <div class="container-fluid py-5">
             <div class="container py-5">
                 <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th scope="col">Products</th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Price</th>
-                                <th scope="col">Quantity</th>
-                                <th scope="col">Total</th>
-                                <th scope="col">Handle</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- START OF A ROW -->
-                            <%
-                            List<CartDTO> cart = (List<CartDTO>) request.getAttribute("cart");
-                            List<MenuDTO> menuList = (List<MenuDTO>) request.getAttribute("menuList");
-                            MenuDTO mdto = null;    
-                            if (cart == null || cart.isEmpty()) {
-                            %>
 
-                            <%
-                            } else {
-                                int index = 0;
-                                for (CartDTO item : cart) {
-                                    for (MenuDTO m : menuList){
-                                        if (m.getMenu_id() == item.getMenu_ID()){
-                                            mdto = m;
-                                            break;
-                                        };
-                                    }
-                            %>
-                            <tr>
-                                <th scope="row">
-                                    <div class="d-flex align-items-center">
-                                        <img src="<%=mdto.getImage()%>" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="" alt="">
-                                    </div>
-                                </th>
-                                <td>
-                                    <!-- Name -->
-                                    <p class="mb-0 mt-4"><%=mdto.getFood()%></p>
-                                </td>
-                                <td>
-                                    <!-- Price -->
-                                    <p class="mb-0 mt-4"><%=mdto.getPrice()%> VND</p>
-                                </td>
-                                <td>
-                                    <div class="input-group quantity mt-4" style="width: 100px;">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-minus rounded-circle bg-light border" >
-                                                <i class="fa fa-minus"></i>
-                                            </button>
-                                        </div>
-                                        <input name="quantity<%=item.getMenu_ID()%>" type="text" class="form-control form-control-sm text-center border-0" value="<%=item.getQuantity()%>">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                                <i class="fa fa-plus"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <!--Sum Price -->
-                                    <p class="mb-0 mt-4"><%=mdto.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()))%>VND</p>
-                                </td>
-                                <td>
-                                    <button class="btn btn-md rounded-circle bg-light border mt-4" >
-                                        <i class="fa fa-times text-danger"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <!-- END OF A ROW-->
-                            <%}%>
+                    <form action="MainController?action=updateCart" method="post">
 
-                        </tbody>
-                    </table>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Products</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Total</th>
+                                    <th scope="col">Handle</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- START OF A ROW -->
+                                <%
+                                List<CartDTO> cart = (List<CartDTO>) request.getAttribute("cart");
+                                List<MenuDTO> menuList = (List<MenuDTO>) request.getAttribute("menuList");
+                                MenuDTO mdto = null;    
+                                if (cart == null || cart.isEmpty()) {
+                                %>
+
+                                <%
+                                } else {
+                                    int index = 0;
+                                    for (CartDTO item : cart) {
+                                        for (MenuDTO m : menuList){
+                                            if (m.getMenu_id() == item.getMenu_ID()){
+                                                mdto = m;
+                                                break;
+                                            };
+                                        }
+                                %>
+
+                                <tr>
+                                    <th scope="row">
+                                        <div class="d-flex align-items-center">
+                                            <img src="<%=mdto.getImage()%>" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="" alt="">
+                                        </div>
+                                    </th>
+                                    <td>
+                                        <!-- Name -->
+                                        <p class="mb-0 mt-4"><%=mdto.getFood()%></p>
+                                    </td>
+                                    <td>
+                                        <!-- Price -->
+                                        <p class="mb-0 mt-4"><%=mdto.getPrice()%> VND</p>
+                                    </td>
+                                    <td>
+                                        <div class="input-group quantity mt-4" style="width: 100px;">
+                                            <div class="input-group-btn">
+                                                
+                                            </div>
+                                            <input name="quantity<%=item.getMenu_ID()%>" type="text" class="form-control form-control-sm text-center border-0" value="<%=item.getQuantity()%>">
+                                            <div class="input-group-btn">
+                                                
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <!--Sum Price -->
+                                        <p class="mb-0 mt-4"><%=mdto.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()))%>VND</p>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-md rounded-circle bg-light border mt-4" >
+                                            <i class="fa fa-times text-danger"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <!-- END OF A ROW-->
+                                <%}%>
+
+                            </tbody>
+                        </table>
+
                 </div>
                 <div class="mt-5">
-                    <form action="MainController?action=updateCart">
-                        <% for (CartDTO item : cart) { %>
-                        <input type="hidden" name="menuId<%=item.getMenu_ID()%>" value="<%=request.getParameter("quantity<%=item.getMenu_ID()")%><%=item.getMenu_ID()%>">
-                        <% } %>
-                        <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="submit">Update Cart</button>
+ 
+                <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="submit">Update Cart</button>
 
-                    </form>
                 </div>
+                </form>
                 <%}%>
                 <div class="row g-4 justify-content-end">
                     <div class="col-8"></div>
