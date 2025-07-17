@@ -1,0 +1,206 @@
+USE [master]
+GO
+DROP DATABASE [PRJ301_ASS]
+GO
+CREATE DATABASE [PRJ301_ASS] 
+GO
+USE [PRJ301_ASS]
+GO
+-- Food Ordering System Database
+-- Phiên bản đã loại bỏ Ship và Promotion
+-- Hỗ trợ Unicode cho tiếng Việt
+-- 1. Bảng User (Đã kết hợp User và User_Detail)
+CREATE TABLE [User] (
+    User_ID INT IDENTITY(1,1) PRIMARY KEY,
+    User_name VARCHAR(255),
+    Password VARCHAR(255),
+    Role VARCHAR(50), -- Admin/Manager/Customer
+    User_fullName NVARCHAR(255) COLLATE Vietnamese_CI_AS,
+    Phone VARCHAR(20),
+    Address NVARCHAR(500) COLLATE Vietnamese_CI_AS,
+    Gender NVARCHAR(10) COLLATE Vietnamese_CI_AS,
+    Email VARCHAR(255)
+);
+-- 3. Bảng Notification
+CREATE TABLE [Notification] (
+    Notification_ID INT IDENTITY(1,1) PRIMARY KEY,
+    Title NVARCHAR(255) COLLATE Vietnamese_CI_AS,
+    Content NTEXT COLLATE Vietnamese_CI_AS,
+    Type VARCHAR(50),
+    Notification_status VARCHAR(50), -- checked/not checked
+    DateReceive DATE,
+    User_ID INT,
+    FOREIGN KEY (User_ID) REFERENCES [User](User_ID)
+);
+-- 4. Bảng Payment
+CREATE TABLE [Payment] (
+    Payment_ID INT IDENTITY(1,1) PRIMARY KEY,
+    Payment_code VARCHAR(255),
+    Payment_date DATE,
+    Payment_status VARCHAR(50), -- Success/Fail
+    User_ID INT,
+    FOREIGN KEY (User_ID) REFERENCES [User](User_ID)
+);
+-- 5. Bảng Order
+CREATE TABLE [Order] (
+    Order_ID INT IDENTITY(1,1) PRIMARY KEY,
+    Order_time DATE,
+    User_ID INT,
+    Payment_ID INT,
+    FOREIGN KEY (User_ID) REFERENCES [User](User_ID),
+    FOREIGN KEY (Payment_ID) REFERENCES [Payment](Payment_ID)
+);
+-- 6. Bảng Category
+CREATE TABLE [Category] (
+    Category_ID INT IDENTITY(1,1) PRIMARY KEY,
+    Category_name NVARCHAR(100) COLLATE Vietnamese_CI_AS -- Cơm/Đồ ăn kèm/Canh/Nước
+);
+-- 7. Bảng Menu
+CREATE TABLE [Menu] (
+    Menu_ID INT IDENTITY(1,1) PRIMARY KEY,
+    Food NVARCHAR(255) COLLATE Vietnamese_CI_AS,
+    Image VARCHAR(255),
+    Price DECIMAL(10,2),
+    Food_description NTEXT COLLATE Vietnamese_CI_AS,
+    Food_status VARCHAR(50), -- Ready to serve/Preparing/Out of Stock
+    Category_ID INT,
+    FOREIGN KEY (Category_ID) REFERENCES [Category](Category_ID)
+);
+-- 8. Bảng Order_Item
+CREATE TABLE [Order_Item] (
+    Order_ID INT,
+    Menu_ID INT,
+    Order_quantity INT,
+    Order_price_time DATE,
+    PRIMARY KEY (Order_ID, Menu_ID),
+    FOREIGN KEY (Order_ID) REFERENCES [Order](Order_ID),
+    FOREIGN KEY (Menu_ID) REFERENCES [Menu](Menu_ID)
+);
+-- 9. Bảng Purchase
+CREATE TABLE [Purchase] (
+    User_ID INT,
+    Menu_ID INT,
+    PRIMARY KEY (User_ID, Menu_ID),
+    FOREIGN KEY (User_ID) REFERENCES [User](User_ID),
+    FOREIGN KEY (Menu_ID) REFERENCES [Menu](Menu_ID)
+);
+-- 10. Bảng Cart_Item
+CREATE TABLE [Cart] (
+    User_ID INT,
+    Menu_ID INT,
+    Quantity INT,
+    PRIMARY KEY (User_ID, Menu_ID),
+    FOREIGN KEY (Menu_ID) REFERENCES [Menu](Menu_ID),
+    FOREIGN KEY (User_ID) REFERENCES [User](User_ID)
+);
+-- 11. Bảng Feedback
+CREATE TABLE [Feedback] (
+    Feedback_ID INT IDENTITY(1,1) PRIMARY KEY,
+    Rating INT,
+    Comment NTEXT COLLATE Vietnamese_CI_AS,
+    User_ID INT,
+    Menu_ID INT,
+    FOREIGN KEY (User_ID) REFERENCES [User](User_ID),
+    FOREIGN KEY (Menu_ID) REFERENCES [Menu](Menu_ID)
+);
+-- 12. Bảng Payment_Method
+CREATE TABLE [Payment_Method] (
+    Method_ID INT IDENTITY(1,1) PRIMARY KEY,
+    Select_method VARCHAR(50), -- Momo/Napas/Paypal
+    Payment_ID INT,
+    FOREIGN KEY (Payment_ID) REFERENCES [Payment](Payment_ID)
+);
+
+-- ==========================================
+-- CHÈN DỮ LIỆU MẪU
+-- ==========================================
+
+-- Insert sample data into User table
+INSERT INTO [User] (User_name, Password, Role, User_fullName, Phone, Address, Gender, Email)
+VALUES 
+('admin', 'admin123', 'Admin', N'Nguyễn Văn Admin', '0987654321', N'123 Đường Lê Lợi, Q1, TP.HCM', N'Nam', 'admin@example.com'),
+('manager1', 'manager123', 'Manager', N'Trần Thị Quản Lý', '0912345678', N'456 Đường Nguyễn Huệ, Q1, TP.HCM', N'Nữ', 'manager@example.com'),
+('customer1', 'customer123', 'Customer', N'Lê Văn Khách Hàng', '0909123456', N'789 Đường Cách Mạng Tháng 8, Q3, TP.HCM', N'Nam', 'customer1@example.com'),
+('customer2', 'customer456', 'Customer', N'Phạm Thị Người Dùng', '0978123456', N'321 Đường Võ Văn Tần, Q3, TP.HCM', N'Nữ', 'customer2@example.com');
+
+-- Insert sample data into Category table
+INSERT INTO [Category] (Category_name)
+VALUES 
+(N'Cơm'),
+(N'Đồ ăn kèm'),
+(N'Canh'),
+(N'Nước uống'),
+(N'Tráng miệng');
+
+-- Insert sample data into Menu table
+INSERT INTO [Menu] (Food, Image, Price, Food_description, Food_status, Category_ID)
+VALUES 
+(N'Cơm tấm sườn bì chả', 'com_tam.jpg', 45000.00, N'Cơm tấm với sườn nướng, bì, chả trứng và đồ chua', 'Ready to serve', 1),
+(N'Cơm gà xé', 'com_ga.jpg', 40000.00, N'Cơm gà xé phay với nước mắm tỏi ớt', 'Ready to serve', 1),
+(N'Phở bò', 'pho_bo.jpg', 50000.00, N'Phở bò tái chín, nước dùng đậm đà', 'Ready to serve', 1),
+(N'Bánh mì thịt', 'banh_mi.jpg', 25000.00, N'Bánh mì với pate, thịt nguội, chả lụa và rau', 'Ready to serve', 2),
+(N'Gỏi cuốn', 'goi_cuon.jpg', 30000.00, N'Gỏi cuốn tôm thịt với bánh tráng và nước chấm', 'Ready to serve', 2),
+(N'Canh chua cá lóc', 'canh_chua.jpg', 35000.00, N'Canh chua cá lóc với đậu bắp, giá, thơm', 'Ready to serve', 3),
+(N'Trà đào', 'tra_dao.jpg', 20000.00, N'Trà đào cam sả mát lạnh', 'Ready to serve', 4),
+(N'Sinh tố bơ', 'sinh_to_bo.jpg', 30000.00, N'Sinh tố bơ sánh mịn, béo ngậy', 'Ready to serve', 4),
+(N'Chè khúc bạch', 'che_khuc_bach.jpg', 25000.00, N'Chè khúc bạch thơm ngon', 'Ready to serve', 5),
+(N'Bánh flan', 'banh_flan.jpg', 20000.00, N'Bánh flan truyền thống', 'Ready to serve', 5);
+
+-- Insert sample data into Cart table
+INSERT INTO [Cart] (User_ID, Menu_ID, Quantity)
+VALUES 
+(3, 1, 2),  -- customer1 has 2 com tam
+(3, 7, 1),  -- customer1 has 1 tra dao
+(4, 3, 1),  -- customer2 has 1 pho bo
+(4, 9, 2);  -- customer2 has 2 che khuc bach
+
+-- Insert sample data into Payment table
+INSERT INTO [Payment] (Payment_code, Payment_date, Payment_status, User_ID)
+VALUES 
+('PAY001', '2023-10-01', 'Success', 3),
+('PAY002', '2023-10-02', 'Success', 4),
+('PAY003', '2023-10-03', 'Fail', 3);
+
+-- Insert sample data into Order table
+INSERT INTO [Order] (Order_time, User_ID, Payment_ID)
+VALUES 
+('2023-10-01', 3, 1),
+('2023-10-02', 4, 2),
+('2023-10-03', 3, NULL);  -- Failed payment order
+
+-- Insert sample data into Order_Item table
+INSERT INTO [Order_Item] (Order_ID, Menu_ID, Order_quantity, Order_price_time)
+VALUES 
+(1, 1, 1, '2023-10-01'),  -- Order 1: 1 com tam
+(1, 4, 2, '2023-10-01'),  -- Order 1: 2 banh mi
+(2, 3, 1, '2023-10-02'),  -- Order 2: 1 pho bo
+(2, 7, 1, '2023-10-02'),  -- Order 2: 1 tra dao
+(3, 2, 2, '2023-10-03');  -- Order 3: 2 com ga (failed payment)
+
+-- Insert sample data into Purchase table
+INSERT INTO [Purchase] (User_ID, Menu_ID)
+VALUES 
+(3, 1),  -- customer1 purchased com tam
+(3, 4),  -- customer1 purchased banh mi
+(4, 3),  -- customer2 purchased pho bo
+(4, 7);  -- customer2 purchased tra dao
+
+-- Insert sample data into Feedback table
+INSERT INTO [Feedback] (Rating, Comment, User_ID, Menu_ID)
+VALUES 
+(5, N'Cơm tấm ngon, sườn mềm thơm', 3, 1),
+(4, N'Phở bò nước dùng đậm đà nhưng hơi ít thịt', 4, 3),
+(5, N'Trà đào rất ngon, mát lạnh', 4, 7);
+
+-- Insert sample data into Notification table
+INSERT INTO [Notification] (Title, Content, Type, Notification_status, DateReceive, User_ID)
+VALUES 
+(N'Đặt hàng thành công', N'Đơn hàng #1 của bạn đã được xác nhận', 'Order', 'checked', '2023-10-01', 3),
+(N'Đặt hàng thành công', N'Đơn hàng #2 của bạn đã được xác nhận', 'Order', 'checked', '2023-10-02', 4),
+(N'Thanh toán thất bại', N'Thanh toán cho đơn hàng #3 không thành công', 'Payment', 'not checked', '2023-10-03', 3);
+
+-- Insert sample data into Payment_Method table
+INSERT INTO [Payment_Method] (Select_method, Payment_ID)
+VALUES 
+('Momo', 1),
+('Napas', 2);
