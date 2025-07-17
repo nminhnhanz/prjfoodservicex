@@ -13,9 +13,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.util.List;
 import model.dao.CartDAO;
-import model.dto.OrderDTO;
+import model.dao.MenuDAO;
+import model.dto.UserDTO;
+import model.dto.CartDTO;
+import model.dto.MenuDTO;
+import sun.net.www.protocol.http.AuthCache;
 
 /**
  *
@@ -24,27 +29,27 @@ import model.dto.OrderDTO;
 @WebServlet(name = "CartController", urlPatterns = {"/CartController"})
 public class CartController extends HttpServlet {
 
+    CartDAO cDAO = new CartDAO();
+    MenuDAO mDAO = new MenuDAO();
+    UserDTO currentUser;
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-
+        currentUser = utils.AuthUtils.getCurrentUser(request);
         String url = "cart.jsp"; // luôn quay về cart.jsp
         try {
-            HttpSession session = request.getSession();
-            Integer userId = (Integer) session.getAttribute("userId"); // đảm bảo bạn đã lưu userId khi login
-            if (userId != null) {
-                CartDAO cartDAO = new CartDAO();
-                int cartId = cartDAO.getOrCreateCartIdByUserId(userId); // bạn sẽ tạo hàm này
-                session.setAttribute("cartId", cartId);
-            }
-
             String action = request.getParameter("action");
             if ("removeFromCart".equals(action)) {
-                removeItem(request, response);
+                url = removeItem(request, response);
                 return; // tránh forward 2 lần
+            } else if ("getCart".equals(action)) {
+                url = getCart(request, response);
             } else if ("clearCart".equals(action)) {
-                clearCart(request, response);
+                url = clearCart(request, response);
                 return;
+            } else if ("updateCart".equals(action)){
+                url = updateCart(request,response);
             }
 
         } catch (Exception e) {
@@ -93,29 +98,39 @@ public class CartController extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private void removeItem(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            int index = Integer.parseInt(request.getParameter("index"));
-            HttpSession session = request.getSession();
-            List<OrderDTO> cart = (List<OrderDTO>) session.getAttribute("cart");
-            if (cart != null && index >= 0 && index < cart.size()) {
-                cart.remove(index);
-            }
+    private String removeItem(HttpServletRequest request, HttpServletResponse response) {
 
-            if (!response.isCommitted()) {
-                RequestDispatcher dispatcher = request.getRequestDispatcher("cart.jsp");
-                dispatcher.forward(request, response);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-
-        }
+        return "cart.jsp";
     }
 
-    private void clearCart(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession();
-        session.removeAttribute("cart");
+    private String clearCart(HttpServletRequest request, HttpServletResponse response) {
+        return "cart.jsp";
+    }
+
+    private String getCart(HttpServletRequest request, HttpServletResponse response) {
+        BigDecimal sum = BigDecimal.ZERO;
+
+        request.setAttribute("cart", cDAO.getCartByUserID(currentUser.getUser_ID()));
+        request.setAttribute("menuList", mDAO.getAllMenus());
+
+        List<CartDTO> cartItemList = (List<CartDTO>) request.getAttribute("cart");
+        List<MenuDTO> menuList = (List<MenuDTO>) request.getAttribute("menuList");
+        for (CartDTO item : cartItemList) {
+            MenuDTO menu = mDAO.getMenuByID(item.getMenu_ID());
+            sum = sum.add(menu.getPrice());
+        }
+        request.setAttribute("cartSum", sum);
+        return "cart.jsp";
+    }
+
+    private String updateCart(HttpServletRequest request, HttpServletResponse response) {
+        int UserID = currentUser.getUser_ID();
+        for (CartDTO c : cDAO.getCartByUserID(UserID)){
+            int newQuantity = Integer.parseInt(request.getParameter("menuId" +
+                                                                    String.valueOf(c.getMenu_ID())));
+            cDAO.updateCartQuantity(UserID, c.getMenu_ID(), newQuantity);
+        }
+        return "cart.jsp";
     }
 
 }

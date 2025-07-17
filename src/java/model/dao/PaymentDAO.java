@@ -128,7 +128,7 @@ public class PaymentDAO {
 
     }
 
-    private boolean createPayment(int UserID) {
+    public boolean createPayment(int UserID) {
         boolean success = false;
         Connection conn = null;
         PreparedStatement ps = null;

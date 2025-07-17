@@ -45,7 +45,9 @@ public class MainController extends HttpServlet {
 
     private boolean isCartAction(String action) {
         return "removeFromCart".equals(action)
-                || "clearCart".equals(action);
+                || "clearCart".equals(action)
+                || "getCart".equals(action)
+                || "updateCart".equals(action);
     }
 
     private boolean isTotalPrice(String action) {
@@ -67,6 +69,8 @@ public class MainController extends HttpServlet {
         String url = WELCOME;
         try {
             String action = request.getParameter("action");
+             System.out.println(action);
+
             if (isUserAction(action)) {
                 url = "/UserController";
             } else if (isMenuAction(action)) {
