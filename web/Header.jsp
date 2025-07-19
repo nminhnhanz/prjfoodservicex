@@ -3,273 +3,114 @@
     Created on : Jul 13, 2025
     Author     : Admin
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <%@page import="model.dto.UserDTO" %>
 <%@page import="model.dto.CategoryDTO" %>
 <%@page import="java.util.List" %>
-<%@page import="utils.AuthUtils" %>
+<%@page import="utils.AuthUtils" %> 
+<!-- Google Web Fonts -->
+<meta charset="utf-8">
+<title>Fruitables - Vegetable Website Template</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<meta content="" name="keywords">
+<meta content="" name="description">
 
-<!-- Bootstrap CSS PHẢI ĐẶT TRƯỚC -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Google Web Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap" rel="stylesheet"> 
 
-<!-- Custom CSS cho navbar -->
-<style>
-.navbar-custom {
-    background-color: #2E1B15 !important; /* Màu nâu đậm */
-    padding: 1rem 0 !important; /* Tăng padding để làm to navbar */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Thêm shadow cho đẹp */
-}
+<!-- Icon Font Stylesheet -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
 
-.navbar-custom .navbar-brand {
-    font-size: 1.5rem !important; /* Làm to chữ brand */
-    font-weight: bold;
-    color: #fff !important;
-}
+<!-- Libraries Stylesheet -->
+<link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+<link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
 
-.navbar-custom .navbar-nav .nav-link {
-    color: #fff !important;
-    font-size: 1.1rem; /* Làm to chữ nav-link */
-}
 
-.navbar-custom .navbar-nav .nav-link:hover {
-    color: #BCAAA4 !important; /* Màu nâu nhạt khi hover */
-}
+<!-- Customized Bootstrap Stylesheet -->
+<link href="css/bootstrap.min.css" rel="stylesheet">
 
-.navbar-custom .form-control,
-.navbar-custom .form-select {
-    border: 1px solid #8D6E63; /* Border màu nâu nhạt hơn */
-}
-
-.navbar-custom .btn-primary {
-    background-color: #8D6E63;
-    border-color: #8D6E63;
-}
-
-.navbar-custom .btn-primary:hover {
-    background-color: #6D4C41;
-    border-color: #6D4C41;
-}
-
-.navbar-custom .btn-secondary {
-    background-color: #8D6E63;
-    border-color: #8D6E63;
-}
-
-.navbar-custom .btn-secondary:hover {
-    background-color: #6D4C41;
-    border-color: #6D4C41;
-}
-
-.navbar-custom .btn-success {
-    background-color: #689F38;
-    border-color: #689F38;
-}
-
-.navbar-custom .btn-outline-light {
-    color: #fff;
-    border-color: #fff;
-    padding: 0.375rem 0.75rem;
-}
-
-.navbar-custom .btn-outline-light:hover {
-    background-color: #fff;
-    color: #2E1B15;
-}
-
-.navbar-custom .nav-link {
-    padding: 0.375rem 0.75rem;
-    border-radius: 0.375rem;
-    transition: all 0.3s ease;
-}
-
-.navbar-custom .nav-link:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-</style>
-
-<nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
-    <div class="container">
-        <!-- Brand/Logo -->
-        <a class="navbar-brand" href="MenuController?action=loadAllMenu">Food Menu</a>
-        
-        <!-- Navbar toggler for mobile -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        
-        <!-- Navbar content -->
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <!-- Search and Filter Section - CENTER -->
-            <% if(AuthUtils.isLoggedIn(request)){ %>
-            <div class="mx-auto">
-                <div class="d-flex align-items-center flex-wrap justify-content-center">
-                    <form action="MenuController" method="post" class="d-flex align-items-center flex-wrap">
-                        <input type="hidden" name="action" value="searchMenu"/>
-                        
-                        <!-- 1. FILTER BY CATEGORY -->
-                        <div class="me-3 mb-2 mb-lg-0">
-                            <select name="categoryId" class="form-select" onchange="this.form.submit();" style="min-width: 160px;">
-                                <option value="0">All Categories</option>
-                                <%
-                                    List<CategoryDTO> categories = (List<CategoryDTO>)request.getAttribute("categories");
-                                    String selectedCategoryId = (String) request.getAttribute("selectedCategoryId");
-                                    if(categories != null){
-                                        for(CategoryDTO category : categories){
-                                            String selected = "";
-                                            if(selectedCategoryId != null && selectedCategoryId.equals(String.valueOf(category.getCategory_ID()))){
-                                                selected = "selected";
-                                            }
-                                %>
-                                    <option value="<%=category.getCategory_ID()%>" <%=selected%>><%=category.getCategory_name()%></option>
-                                <%
-                                        }
-                                    }
-                                %>
-                            </select>
-                        </div>
-                        
-                        <!-- 2. SEARCH MENU -->
-                        <div class="me-3 mb-2 mb-lg-0">
-                            <input type="text" name="keyword" class="form-control" 
-                                   value="<%=request.getAttribute("keyword")!=null?request.getAttribute("keyword"):""%>" 
-                                   placeholder="Enter menu name..." style="min-width: 220px;"/>
-                        </div>
-                        
-                        <!-- Search Button -->
-                        <div class="me-3 mb-2 mb-lg-0">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-search"></i> Search
-                            </button>
-                        </div>
-                    </form>
-                    
-                    <!-- 3. SHOW ALL MENU -->
-                    <div class="me-3 mb-2 mb-lg-0">
-                        <a href="MenuController?action=loadAllMenu" class="btn btn-secondary">
-                            <i class="fas fa-list"></i> Show All
-                        </a>
-                    </div>
-                    
-                    <!-- Add Menu Button (Admin only) -->
-                    <% if(AuthUtils.isAdmin(request)){ %>
-                    <div class="me-3 mb-2 mb-lg-0">
-                        <a href="menuForm.jsp" class="btn btn-success">
-                            <i class="fas fa-plus"></i> Add
-                        </a>
-                    </div>
-                    <% } %>
-                </div>
+<!-- Template Stylesheet -->
+<link href="css/style.css" rel="stylesheet">
+<!-- Navbar start -->
+<div class="container-fluid fixed-top">
+    <div class="container topbar bg-primary d-none d-lg-block">
+        <div class="d-flex justify-content-between">
+            <div class="top-info ps-2">
+                <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">123 Le Van Viet, Thu Duc</a></small>
+                <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">ngoquenfood@helpmepls.com</a></small>
             </div>
-            <% } %>
-            
-            <!-- Right side items -->
-            <div class="navbar-nav ms-auto">
-                <% if(AuthUtils.isLoggedIn(request)){ %>
-                    <!-- 4. SEE YOUR CART -->
-                    <a class="nav-link btn btn-outline-light me-2 d-flex align-items-center" href="MainController?action=getCart">
-                        <i class="fas fa-shopping-cart me-1"></i> Cart
-                    </a>
-                    <a class="nav-link d-flex align-items-center" href="MainController?action=logout">
-                        <i class="fas fa-sign-out-alt me-1"></i> Logout
-                    </a>
-                <% } else { %>
-                    <a class="nav-link d-flex align-items-center" href="login.jsp">
-                        <i class="fas fa-sign-in-alt me-1"></i> Login
-                    </a>
-                <% } %>
+            <div class="top-link pe-2">
+                <a href="#" class="text-white"><small class="text-white mx-2"> Policy</small>/</a>
+                <a href="#" class="text-white"><small class="text-white mx-2">Terms of Use</small>/</a>
+                <a href="#" class="text-white"><small class="text-white ms-2">Sales and Refunds</small></a>
             </div>
         </div>
     </div>
-</nav>
-
-<!-- ================ WELCOME SECTION ================ -->
-<% if(AuthUtils.isLoggedIn(request)){ %>
-    <%
-        UserDTO user = AuthUtils.getCurrentUser(request);
-    %>
-    <div class="welcome-section <%= AuthUtils.isAdmin(request) ? "admin-welcome" : AuthUtils.isManager(request) ? "manager-welcome" : "customer-welcome" %>">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <div class="welcome-content">
-                        <%
-                            if(AuthUtils.isAdmin(request)) {
-                        %>
-                            <h2 class="mb-2">
-                                Chào mừng Admin!
-                            </h2>
-                            <p class="mb-0 fs-5">
-                                Xin chào <strong><%=user.getUser_fullName()%></strong>
-                            </p>
-                        <%
-                            } else if(AuthUtils.isManager(request)) {
-                        %>
-                            <h2 class="mb-2">
-                                Chào mừng Manager!
-                            </h2>
-                            <p class="mb-0 fs-5">
-                                Xin chào <strong><%=user.getUser_fullName()%></strong>
-                            </p>
-                        <%
-                            } else if(AuthUtils.isCustomer(request)) {
-                        %>
-                            <h2 class="mb-2">
-                                Chào mừng đến với Food Menu!
-                            </h2>
-                            <p class="mb-0 fs-5">
-                                Kính chào quý khách <strong><%=user.getUser_fullName()%></strong>
-                            </p>
-                        <%
-                            }
-                        %>
+    <div class="container px-0">
+        <nav class="navbar navbar-light bg-white navbar-expand-xl">
+            <a href="index.html" class="navbar-brand"><h1 class="text-primary display-6">Ngo Quyen Food</h1></a>
+            <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+                <span class="fa fa-bars text-primary"></span>
+            </button>
+            <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
+                <div class="navbar-nav mx-auto">
+                    <a href="MainController" class="nav-item nav-link active">Home</a>
+                    <a href="shop.html" class="nav-item nav-link">Shop</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                        <div class="dropdown-menu m-0 bg-secondary rounded-0">
+                            <a href="cart.html" class="dropdown-item">Cart</a>
+                            <a href="chackout.html" class="dropdown-item">Chackout</a>
+                            <a href="testimonial.html" class="dropdown-item">Testimonial</a>
+                            <a href="404.html" class="dropdown-item">404 Page</a>
+                        </div>
                     </div>
+                    <a href="contact.html" class="nav-item nav-link">Contact</a>
+                </div>
+                <div class="d-flex m-3 me-0">
+                    <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>
+                    <a href="MainController?action=getCart" class="position-relative me-4 my-auto">
+                        <i class="fa fa-shopping-bag fa-2x"></i>
+                        <span class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1" style="top: -5px; left: 15px; height: 20px; min-width: 20px;">3</span>
+                    </a>
+                    <%if (!AuthUtils.isLoggedIn(request)){%>
+                    <a href="login.jsp" class="my-auto">
+                        Login
+                    </a>
+                    /
+                    <a href="register.jsp" class="my-auto">
+                        Register
+                    </a>
+                    <%} else {%>
+                        Welcome, <%=AuthUtils.getCurrentUser(request).getUser_fullName()%>.
+                        
+                        <a href="MainController?action=logout">Logout</a>
+                    <%}%>
                 </div>
             </div>
-        </div>
+        </nav>
     </div>
-<% } else { %>
-    <!-- Welcome section for guests -->
-    <div class="welcome-section guest-welcome">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <div class="welcome-content">
-                        <h2 class="mb-2"> 
-                            Chào mừng đến với Food Menu!
-                        </h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-<% } %>
-
-<!-- Messages Section -->
-<div class="container mt-3">
-    <%
-        String message = (String) request.getAttribute("message");
-        String error = (String) request.getAttribute("error");
-        if(message != null){
-    %>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong><%=message%></strong>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    <%
-        }
-        if(error != null){
-    %>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong><%=error%></strong>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    <%
-        }
-    %>
 </div>
-
-<!-- Font Awesome for icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Navbar End -->
+<!-- Modal Search Start -->
+        <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-fullscreen">
+                <div class="modal-content rounded-0">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body d-flex align-items-center">
+                        <div class="input-group w-75 mx-auto d-flex">
+                            <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1">
+                            <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Search End -->

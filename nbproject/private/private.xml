@@ -4,34 +4,30 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/model/dto/UserDTO.java</file>
-            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/controller/TotalPriceController.java</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/model/dao/MenuDAO.java</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/Filter/adminFilter.java</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/uploadTest.jsp</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/controller/OrderController.java</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/controller/FileController.java</file>
+            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/index.jsp</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/Filter/customerFilter.java</file>
+            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/controller/DefaultController.java</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/utils/DbUtils.java</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/utils/AuthUtils.java</file>
-            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/orderFail.jsp</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/Footer.jsp</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/welcome.jsp</file>
-            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/orderSuccess.jsp</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/model/dao/UserDAO.java</file>
-            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/controller/MenuController.java</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/controller/CategoryController.java</file>
-            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/login.jsp</file>
+            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/controller/MenuController.java</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/error.jsp</file>
+            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/login.jsp</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/controller/CartController.java</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/model/dao/CategoryDAO.java</file>
-            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/order.jsp</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/feedback.jsp</file>
+            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/scss/bootstrap/scss/_breadcrumb.scss</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/model/dao/PaymentDAO.java</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/utils/PasswordUtils.java</file>
-            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/index.html</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/controller/UserController.java</file>
-            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/menuFeedbacks.jsp</file>
-            <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/Filter/managerFilter.java</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/web/register.jsp</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/controller/FeedbackController.java</file>
             <file>file:/C:/Users/Nghia/Documents/NetBeansProjects/foodwebapp/src/java/controller/MainController.java</file>

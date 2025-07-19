@@ -11,7 +11,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.List;
+import model.dao.CartDAO;
 import model.dao.UserDAO;
+import model.dto.CartDTO;
 import model.dto.UserDTO;
 
 /**
@@ -21,7 +25,7 @@ import model.dto.UserDTO;
 @WebServlet(name = "UserController", urlPatterns = {"/UserController"})
 public class UserController extends HttpServlet {
 
-    private static final String WELCOME = "welcome.jsp";
+    private static final String WELCOME = "/DefaultController";
     private static final String LOGIN = "login.jsp";
     private static final String REGISTER = "register.jsp";
 
@@ -94,10 +98,17 @@ public class UserController extends HttpServlet {
         String user_name = request.getParameter("user_name");
         String password = request.getParameter("password");
         UserDAO userdao = new UserDAO();
+        CartDAO cDAO = new CartDAO();
+
         if (userdao.login(user_name, password)) {
-            url = "welcome.jsp";
+            url = "index.jsp";
             UserDTO user = userdao.getUserByName(user_name);
+            List<CartDTO> cartList = cDAO.getCartByUserID(user.getUser_ID());
+            if (cartList == null) {
+                cartList = new ArrayList<>();
+            }
             session.setAttribute("user", user);
+            session.setAttribute("cart", cartList);
 
         } else {
             url = "login.jsp";

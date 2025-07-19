@@ -18,7 +18,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @WebServlet(name = "MainController", urlPatterns = {"/MainController", "/mc"})
 public class MainController extends HttpServlet {
 
-    private static final String WELCOME = "login.jsp";
+    private static final String WELCOME = "/DefaultController";
 
     private boolean isUserAction(String action) {
         return "login".equals(action)
@@ -47,7 +47,8 @@ public class MainController extends HttpServlet {
         return "removeFromCart".equals(action)
                 || "clearCart".equals(action)
                 || "getCart".equals(action)
-                || "updateCart".equals(action);
+                || "updateCart".equals(action)
+                || "addToCart".equals(action);
     }
 
     private boolean isTotalPrice(String action) {
@@ -84,14 +85,17 @@ public class MainController extends HttpServlet {
                     url = "/OrderController";
                 } else if (isCartAction(action)) {
                     url = "/CartController";
-                } else if (isTotalPrice(action)) {
-                    url = "/TotalPriceController";
                 } else if (isFeedbackAction(action)) {
                     url = "/FeedbackController";
                 } else if (isPaymentAction(action)) {
                     url = "/PaymentController";
                 }
-            }
+                else {
+                    url = "/DefaultController";
+                }
+            }else {
+                    url = "/DefaultController";
+                }
 
         } catch (Exception e) {
         } finally {
