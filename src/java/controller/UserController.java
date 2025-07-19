@@ -101,7 +101,7 @@ public class UserController extends HttpServlet {
         CartDAO cDAO = new CartDAO();
 
         if (userdao.login(user_name, password)) {
-            url = "index.jsp";
+            url = "/DefaultController";
             UserDTO user = userdao.getUserByName(user_name);
             List<CartDTO> cartList = cDAO.getCartByUserID(user.getUser_ID());
             if (cartList == null) {

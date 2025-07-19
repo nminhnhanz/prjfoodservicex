@@ -134,7 +134,7 @@ public class CartController extends HttpServlet {
         session.setAttribute("cart", cDAO.getCartByUserID(currentUser.getUser_ID()));
         
         request.setAttribute("menuList", mDAO.getAllMenus());
-        request.setAttribute("cartSum", calCartSum(currentUser.getUser_ID()));
+        session.setAttribute("cartSum", calCartSum(currentUser.getUser_ID()));
         return "cart.jsp";
     }
 
@@ -150,7 +150,7 @@ public class CartController extends HttpServlet {
         
         session.setAttribute("cart", cDAO.getCartByUserID(UserID));
         request.setAttribute("menuList", mDAO.getAllMenus());
-        request.setAttribute("cartSum", calCartSum(currentUser.getUser_ID()));
+        session.setAttribute("cartSum", calCartSum(currentUser.getUser_ID()));
 
         return "cart.jsp";
     }
@@ -164,5 +164,6 @@ public class CartController extends HttpServlet {
         }
         return sum;
     }
+    
 
 }

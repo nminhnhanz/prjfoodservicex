@@ -18,10 +18,11 @@ public class OrderDTO {
     private int menu_ID;
     private int order_quantity;
     private Date order_price_time;  
-
+    private String note;
     public OrderDTO() {
     }
 
+    
     public OrderDTO(int order_ID, Date order_time, int user_ID, int payment_ID, int menu_ID, int order_quantity, Date order_price_time) {
         this.order_ID = order_ID;
         this.order_time = order_time;
@@ -87,5 +88,13 @@ public class OrderDTO {
     public void setOrder_price_time(Date order_price_time) {
         this.order_price_time = order_price_time;
     }   
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+    
 }
 

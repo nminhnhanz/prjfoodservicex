@@ -15,7 +15,7 @@ import jakarta.servlet.http.HttpServletResponse;
  *
  * @author Admin
  */
-@WebServlet(name = "MainController", urlPatterns = {"/MainController", "/mc"})
+@WebServlet(name = "MainController", urlPatterns = {"","/MainController", "/mc"})
 public class MainController extends HttpServlet {
 
     private static final String WELCOME = "/DefaultController";
@@ -33,7 +33,9 @@ public class MainController extends HttpServlet {
                 || "updateMenu".equals(action)
                 || "deleteMenu".equals(action);
     }
-
+    private boolean isCheckOutAction(String action){
+        return "checkOut".equals(action);
+    }
     private boolean isCategoryAction(String action) {
         return "searchCategory".equals(action);
     }
@@ -89,6 +91,8 @@ public class MainController extends HttpServlet {
                     url = "/FeedbackController";
                 } else if (isPaymentAction(action)) {
                     url = "/PaymentController";
+                } else if (isCheckOutAction(action)){
+                    url = "/CheckOutController";
                 }
                 else {
                     url = "/DefaultController";

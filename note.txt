@@ -6,10 +6,7 @@ CREATE DATABASE [PRJ301_ASS]
 GO
 USE [PRJ301_ASS]
 GO
--- Food Ordering System Database
--- Phiên bản đã loại bỏ Ship và Promotion
--- Hỗ trợ Unicode cho tiếng Việt
--- 1. Bảng User (Đã kết hợp User và User_Detail)
+
 CREATE TABLE [User] (
     User_ID INT IDENTITY(1,1) PRIMARY KEY,
     User_name VARCHAR(255),
@@ -37,7 +34,8 @@ CREATE TABLE [Payment] (
     Payment_ID INT IDENTITY(1,1) PRIMARY KEY,
     Payment_code VARCHAR(255),
     Payment_date DATE,
-    Payment_status VARCHAR(50), -- Success/Fail
+    Payment_status VARCHAR(50), 
+    Payment_method VARCHAR(50),
     User_ID INT,
     FOREIGN KEY (User_ID) REFERENCES [User](User_ID)
 );
@@ -47,6 +45,7 @@ CREATE TABLE [Order] (
     Order_time DATE,
     User_ID INT,
     Payment_ID INT,
+    Note TEXT,
     FOREIGN KEY (User_ID) REFERENCES [User](User_ID),
     FOREIGN KEY (Payment_ID) REFERENCES [Payment](Payment_ID)
 );
@@ -103,13 +102,7 @@ CREATE TABLE [Feedback] (
     FOREIGN KEY (User_ID) REFERENCES [User](User_ID),
     FOREIGN KEY (Menu_ID) REFERENCES [Menu](Menu_ID)
 );
--- 12. Bảng Payment_Method
-CREATE TABLE [Payment_Method] (
-    Method_ID INT IDENTITY(1,1) PRIMARY KEY,
-    Select_method VARCHAR(50), -- Momo/Napas/Paypal
-    Payment_ID INT,
-    FOREIGN KEY (Payment_ID) REFERENCES [Payment](Payment_ID)
-);
+
 
 -- ==========================================
 -- CHÈN DỮ LIỆU MẪU
@@ -155,18 +148,18 @@ VALUES
 (4, 9, 2);  -- customer2 has 2 che khuc bach
 
 -- Insert sample data into Payment table
-INSERT INTO [Payment] (Payment_code, Payment_date, Payment_status, User_ID)
+INSERT INTO [Payment] (Payment_code, Payment_date, Payment_status, User_ID , Payment_method)
 VALUES 
-('PAY001', '2023-10-01', 'Success', 3),
-('PAY002', '2023-10-02', 'Success', 4),
-('PAY003', '2023-10-03', 'Fail', 3);
+('PAY001', '2023-10-01', 'Success', 3 , 'cod'),
+('PAY002', '2023-10-02', 'Success', 4 , 'vietqr'),
+('PAY003', '2023-10-03', 'Fail', 3, 'vietqr');
 
 -- Insert sample data into Order table
 INSERT INTO [Order] (Order_time, User_ID, Payment_ID)
 VALUES 
 ('2023-10-01', 3, 1),
 ('2023-10-02', 4, 2),
-('2023-10-03', 3, NULL);  -- Failed payment order
+('2023-10-03', 3, 3);  -- Failed payment order
 
 -- Insert sample data into Order_Item table
 INSERT INTO [Order_Item] (Order_ID, Menu_ID, Order_quantity, Order_price_time)
@@ -198,9 +191,3 @@ VALUES
 (N'Đặt hàng thành công', N'Đơn hàng #1 của bạn đã được xác nhận', 'Order', 'checked', '2023-10-01', 3),
 (N'Đặt hàng thành công', N'Đơn hàng #2 của bạn đã được xác nhận', 'Order', 'checked', '2023-10-02', 4),
 (N'Thanh toán thất bại', N'Thanh toán cho đơn hàng #3 không thành công', 'Payment', 'not checked', '2023-10-03', 3);
-
--- Insert sample data into Payment_Method table
-INSERT INTO [Payment_Method] (Select_method, Payment_ID)
-VALUES 
-('Momo', 1),
-('Napas', 2);

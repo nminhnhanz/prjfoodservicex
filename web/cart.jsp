@@ -10,7 +10,6 @@
 <%@ page import="java.math.BigDecimal" %>
 
 <!DOCTYPE html>
-<!DOCTYPE html>
 <html lang="en">
 
     <head>
@@ -135,11 +134,11 @@
                                     <td>
                                         <div class="input-group quantity mt-4" style="width: 100px;">
                                             <div class="input-group-btn">
-                                                
+
                                             </div>
                                             <input name="quantity<%=item.getMenu_ID()%>" type="text" class="form-control form-control-sm text-center border-0" value="<%=item.getQuantity()%>">
                                             <div class="input-group-btn">
-                                                
+
                                             </div>
                                         </div>
                                     </td>
@@ -157,13 +156,13 @@
                                 <%}%>
 
                             </tbody>
-                            
+
                         </table>
 
                 </div>
                 <div class="mt-5">
- 
-                <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="submit">Update Cart</button>
+
+                    <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="submit">Update Cart</button>
 
                 </div>
                 </form>
@@ -177,19 +176,24 @@
                             </div>
                             <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
                                 <h5 class="mb-0 ps-4 me-4">Total</h5>
-                                <p class="mb-0 pe-4"><%=(BigDecimal)request.getAttribute("cartSum")%></p>
+                                <p class="mb-0 pe-4"><%=(BigDecimal)request.getSession().getAttribute("cartSum")%></p>
                             </div>
-                            <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="button">Proceed Checkout</button>
+                            <form action="MainController" method="post">
+                                <input type="hidden" name="action" value="checkOut">
+                                <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="submit">
+                                    Proceed Checkout
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-                           
+
         <!-- Cart Page End -->
 
 
-       <%@include file="Footer.jsp" %>
+        <%@include file="Footer.jsp" %>
 
     </body>
 
