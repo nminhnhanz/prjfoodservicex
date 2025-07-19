@@ -57,15 +57,15 @@
         <div class="container-fluid py-5">
             <div class="container py-5">
                 <h1 class="mb-4">Billing details</h1>
-                <form action="MainController">
-                    <input type="hidden" value="createOrder" >
+                <form action="MainController" method="post">
+                    <input type="hidden" name="action" value="createOrder" >
                     <div class="row g-5">
                         <div class="col-md-12 col-lg-6 col-xl-7">
                             <div class="row">
                                 <div class="col-md-12 col-lg-12">
                                     <div class="form-item w-100">
                                         <label class="form-label my-3">Name<sup>*</sup></label>
-                                        <input type="text" class="form-control" value="<%=AuthUtils.getCurrentUser(request).getUser_fullName()%>">
+                                        <input type="text" name="order_fullName" class="form-control" value="<%=AuthUtils.getCurrentUser(request).getUser_fullName()%>">
                                     </div>
                                 </div>
 
@@ -73,17 +73,17 @@
 
                             <div class="form-item">
                                 <label class="form-label my-3">Address<sup>*</sup></label>
-                                <input type="text" class="form-control" value="<%=AuthUtils.getCurrentUser(request).getAddress()%>">
+                                <input type="text" name="order_address" class="form-control" value="<%=AuthUtils.getCurrentUser(request).getAddress()%>">
                             </div>
 
 
                             <div class="form-item">
-                                <label class="form-label my-3">Mobile<sup>*</sup></label>
-                                <input type="tel" class="form-control" value="<%=AuthUtils.getCurrentUser(request).getPhone()%>">
+                                <label class="form-label my-3">Phone<sup>*</sup></label>
+                                <input type="tel" name="order_phone" class="form-control" value="<%=AuthUtils.getCurrentUser(request).getPhone()%>">
                             </div>
                             <div class="form-item">
                                 <label class="form-label my-3">Email Address<sup>*</sup></label>
-                                <input type="email" class="form-control" value="<%=AuthUtils.getCurrentUser(request).getEmail()%>">
+                                <input type="email" name="order_email" class="form-control" value="<%=AuthUtils.getCurrentUser(request).getEmail()%>">
                             </div>
 
 
@@ -91,7 +91,7 @@
                             <div class="form-item">
                                 <label class="form-label my-3">Note</label>
 
-                                <textarea name="text" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Oreder Notes (Optional)"></textarea>
+                                <textarea name="order_note" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Oreder Notes (Optional)"></textarea>
                             </div>
                         </div>
                         <div class="col-md-12 col-lg-6 col-xl-5">

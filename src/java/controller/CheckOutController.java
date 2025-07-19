@@ -19,6 +19,7 @@ import model.dto.MenuDTO;
 import model.dao.OrderDAO;
 import model.dto.OrderDTO;
 import model.dao.CartDAO;
+import model.dto.UserDTO;
 /**
  *
  * @author ASUS
@@ -99,28 +100,56 @@ public class CheckOutController extends HttpServlet {
 
     private String OrderCreatingCenter(HttpServletRequest request, HttpServletResponse response) {
         try {
-            // Lấy tham số từ form
-            String menu_ID_str = request.getParameter("menu_ID");
-            String quantity_str = request.getParameter("order_quantity");
-            String priceTime_str = request.getParameter("order_price_time");
-            String note = request.getParameter("order_note");
-            System.out.println("Received Parameter:");
-            System.out.println("menu_ID = " + menu_ID_str);
-            System.out.println("quantity = " + quantity_str);
-            System.out.println("priceTime = " + priceTime_str);
+        // Get form parameters
+        String name = request.getParameter("order_fullName");
+        String address = request.getParameter("order_address");
+        String phone = request.getParameter("order_phone"); // optional, not stored in OrderDTO
+        String email = request.getParameter("order_email"); // optional, not stored in OrderDTO
+        String note = request.getParameter("order_note");
+        
+            System.out.println(name);
+            System.out.println(note);
+        // Get current date
+        java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
 
-            // Kiểm tra hợp lệ
-            if (menu_ID_str == null || quantity_str == null || priceTime_str == null
-                    || menu_ID_str.isEmpty() || quantity_str.isEmpty() || priceTime_str.isEmpty()) {
-                request.setAttribute("error", "Missing order information.");
-                return "orderFail.jsp";
-            }
+        // Get user from session
+        HttpSession session = request.getSession();
+        int userID = 0;
+        if (session != null && session.getAttribute("user") != null) {
+            UserDTO user = (UserDTO) session.getAttribute("user");
+            userID = user.getUser_ID();
+        }
 
+        // Assume payment_ID = 1 (or use logic to determine it)
+        int paymentID = 1;
+
+        // Build OrderDTO
+        OrderDTO orderdto = new OrderDTO();
+        orderdto.setFullName(name);
+        orderdto.setAddress(address);
+        orderdto.setNote(note);
+        orderdto.setOrder_time(currentDate);
+        orderdto.setUser_ID(userID);
+        orderdto.setPayment_ID(paymentID);
+
+        // Save to DB
+        OrderDAO orderDAO = new OrderDAO();
+        boolean success = orderDAO.create(orderdto);
+            System.out.println("SUCCESS " + success);
+        if (success) {
+            request.setAttribute("message", "Order created successfully!");
+            // Redirect or forward to confirmation page
+            return "orderSuccess.jsp";
+        } else {
+            request.setAttribute("error", "Failed to create order.");
+            return "checkout.jsp";
         }
-        finally{
-            
-        }
-        return "";
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        request.setAttribute("error", "An error occurred during order creation.");
+        return "checkout.jsp";
+    }
     }
 
     private String OrderFormingCenter(HttpServletRequest request, HttpServletResponse response) {
@@ -149,54 +178,6 @@ public class CheckOutController extends HttpServlet {
             request.setAttribute("error", "Error OrderFormingCenter: " + e.getMessage());
             return "orderFail.jsp";
         }
-    }
-
-    /**
-     * Tính tổng tiền từ session cart (cùng nguồn dữ liệu với cart.jsp)
-     */
-    private double calculateSessionCartTotal(HttpServletRequest request) {
-        BigDecimal total = BigDecimal.ZERO;
-        try {
-            HttpSession session = request.getSession();
-            @SuppressWarnings("unchecked")
-            List<OrderDTO> cart = (List<OrderDTO>) session.getAttribute("cart");
-            
-            if (cart != null && !cart.isEmpty()) {
-                for (OrderDTO item : cart) {
-                    // Get menu item details by Menu_ID
-                    MenuDTO menuItem = mdao.getMenuByID(item.getMenu_ID());
-                    if (menuItem != null) {
-                        // Calculate: Price * Order_quantity
-                        BigDecimal quantity = BigDecimal.valueOf(item.getOrder_quantity());
-                        total = total.add(menuItem.getPrice().multiply(quantity));
-                    }
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error calculating session cart total: " + e.getMessage());
-        }
-        return total.doubleValue();
-    }
-
-    /**
-     * Calculates total price for all items in an order
-     */
-    private double calculateOrderTotal(int orderId) {
-        BigDecimal total = BigDecimal.ZERO;
-        try {
-            List<OrderDTO> orderItems = odao.getOrderItemsByOrderId(orderId);
-
-            for (OrderDTO item : orderItems) {
-                MenuDTO menuItem = mdao.getMenuByID(item.getMenu_ID());
-                if (menuItem != null) {
-                    BigDecimal quantity = BigDecimal.valueOf(item.getOrder_quantity());
-                    total = total.add(menuItem.getPrice().multiply(quantity));
-                }
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Error calculating order total: " + e.getMessage());
-        }
-        return total.doubleValue();
     }
 
     private String checkOutProcessing(HttpServletRequest request, HttpServletResponse response) {

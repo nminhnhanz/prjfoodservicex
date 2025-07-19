@@ -44,11 +44,16 @@ CREATE TABLE [Order] (
     Order_ID INT IDENTITY(1,1) PRIMARY KEY,
     Order_time DATE,
     User_ID INT,
+    FullName NVARCHAR(255),
+    Address NVARCHAR(500) COLLATE Vietnamese_CI_AS,
+    Phone NVARCHAR(20),
+    Email NVARCHAR(255),
     Payment_ID INT,
     Note TEXT,
     FOREIGN KEY (User_ID) REFERENCES [User](User_ID),
     FOREIGN KEY (Payment_ID) REFERENCES [Payment](Payment_ID)
 );
+
 -- 6. Bảng Category
 CREATE TABLE [Category] (
     Category_ID INT IDENTITY(1,1) PRIMARY KEY,
@@ -120,7 +125,7 @@ VALUES
 -- Insert sample data into Menu table
 INSERT INTO [Menu] (Food, Image, Price, Food_description, Food_status, Category_ID)
 VALUES 
-(N'Cơm tấm sườn bì chả', 'images/food/food/com-tam-suon-bi-cha.jpg', 45000.00, N'Cơm tấm với sườn nướng, bì, chả trứng và đồ chua', 'Ready to serve', 1),
+(N'Cơm tấm sườn bì chả', 'images/food/com-tam-suon-bi-cha.jpg', 45000.00, N'Cơm tấm với sườn nướng, bì, chả trứng và đồ chua', 'Ready to serve', 1),
 (N'Cơm gà xé', 'images/food/com_ga_xe.jpg', 40000.00, N'Cơm gà xé phay với nước mắm tỏi ớt', 'Ready to serve', 1),
 (N'Phở bò', 'images/food/pho_bo.jpg', 50000.00, N'Phở bò tái chín, nước dùng đậm đà', 'Ready to serve', 1),
 (N'Bánh mì thịt', 'images/food/banh_mi_thit_nuong.jpg', 25000.00, N'Bánh mì với pate, thịt nguội, chả lụa và rau', 'Ready to serve', 2),
@@ -147,11 +152,14 @@ VALUES
 ('PAY003', '2023-10-03', 'Fail', 3, 'vietqr');
 
 -- Insert sample data into Order table
-INSERT INTO [Order] (Order_time, User_ID, Payment_ID)
+INSERT INTO [Order] 
+(Order_time, User_ID, Payment_ID, Address, FullName, Phone, Email, Note)
 VALUES 
-('2023-10-01', 3, 1),
-('2023-10-02', 4, 2),
-('2023-10-03', 3, 3);  -- Failed payment order
+('2023-10-01', 3, 1, N'789 Đường Cách Mạng Tháng 8, Q3, TP.HCM', N'Nguyễn Văn A', '0909123456', 'vana@example.com', N'Giao buổi sáng'),
+('2023-10-02', 4, 2, N'111, Lê Văn Việt, Thủ Đức', N'Trần Thị B', '0911234567', 'thib@example.com', N'Gọi trước khi giao'),
+('2023-10-03', 3, 3, N'314, Đường D, Hà Nội', N'Lê Văn C', '0922345678', 'levanc@example.com', N'Thanh toán thất bại');
+
+
 
 -- Insert sample data into Order_Item table
 INSERT INTO [Order_Item] (Order_ID, Menu_ID, Order_quantity, Order_price_time)

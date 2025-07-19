@@ -1,36 +1,31 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model.dto;
 
 import java.sql.Date;
 
-/**
- *
- * @author ASUS
- */
 public class OrderDTO {
     private int order_ID;
     private Date order_time;
     private int user_ID;
-    private int payment_ID;   
-    private int menu_ID;
-    private int order_quantity;
-    private Date order_price_time;  
+    private String fullName;
+    private String address;
+    private String phone;
+    private String email;
+    private int payment_ID;
     private String note;
+
     public OrderDTO() {
     }
 
-    
-    public OrderDTO(int order_ID, Date order_time, int user_ID, int payment_ID, int menu_ID, int order_quantity, Date order_price_time) {
+    public OrderDTO(int order_ID, Date order_time, int user_ID, String fullName, String address, String phone, String email, int payment_ID, String note) {
         this.order_ID = order_ID;
         this.order_time = order_time;
         this.user_ID = user_ID;
+        this.fullName = fullName;
+        this.address = address;
+        this.phone = phone;
+        this.email = email;
         this.payment_ID = payment_ID;
-        this.menu_ID = menu_ID;
-        this.order_quantity = order_quantity;
-        this.order_price_time = order_price_time;
+        this.note = note;
     }
 
     public int getOrder_ID() {
@@ -57,6 +52,38 @@ public class OrderDTO {
         this.user_ID = user_ID;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public int getPayment_ID() {
         return payment_ID;
     }
@@ -65,29 +92,6 @@ public class OrderDTO {
         this.payment_ID = payment_ID;
     }
 
-    public int getMenu_ID() {
-        return menu_ID;
-    }
-
-    public void setMenu_ID(int menu_ID) {
-        this.menu_ID = menu_ID;
-    }
-
-    public int getOrder_quantity() {
-        return order_quantity;
-    }
-
-    public void setOrder_quantity(int order_quantity) {
-        this.order_quantity = order_quantity;
-    }
-
-    public Date getOrder_price_time() {
-        return order_price_time;
-    }
-
-    public void setOrder_price_time(Date order_price_time) {
-        this.order_price_time = order_price_time;
-    }   
     public String getNote() {
         return note;
     }
@@ -95,6 +99,4 @@ public class OrderDTO {
     public void setNote(String note) {
         this.note = note;
     }
-    
 }
-

@@ -34,16 +34,13 @@ public class MainController extends HttpServlet {
                 || "deleteMenu".equals(action);
     }
     private boolean isCheckOutAction(String action){
-        return "checkOut".equals(action);
+        return "checkOut".equals(action)
+                ||"createOrder".equals(action);
     }
     private boolean isCategoryAction(String action) {
         return "searchCategory".equals(action);
     }
 
-    private boolean isOrderAction(String action) {
-        return "createOrder".equals(action)
-                || "goToOrder".equals(action);
-    }
 
     private boolean isCartAction(String action) {
         return "removeFromCart".equals(action)
@@ -53,9 +50,7 @@ public class MainController extends HttpServlet {
                 || "addToCart".equals(action);
     }
 
-    private boolean isTotalPrice(String action) {
-        return "sumMoney".equals(action);
-    }
+
 
     private boolean isFeedbackAction(String action) {
         return "goToFeedback".equals(action)
@@ -83,16 +78,14 @@ public class MainController extends HttpServlet {
                     url = "/MenuController";
                 } else if (isCategoryAction(action)) {
                     url = "/CategoryController";
-                } else if (isOrderAction(action)) {
-                    url = "/OrderController";
+                } else if (isCheckOutAction(action)) {
+                    url = "/CheckOutController";
                 } else if (isCartAction(action)) {
                     url = "/CartController";
                 } else if (isFeedbackAction(action)) {
                     url = "/FeedbackController";
                 } else if (isPaymentAction(action)) {
                     url = "/PaymentController";
-                } else if (isCheckOutAction(action)){
-                    url = "/CheckOutController";
                 }
                 else {
                     url = "/DefaultController";
