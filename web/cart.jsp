@@ -83,7 +83,6 @@
                 <div class="table-responsive">
 
                     <form action="MainController?action=updateCart" method="post">
-
                         <table class="table">
                             <thead>
                                 <tr>
@@ -96,14 +95,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- START OF A ROW -->
                                 <%
                                 List<CartDTO> cart = (List<CartDTO>) request.getSession().getAttribute("cart");
                                 List<MenuDTO> menuList = (List<MenuDTO>) request.getAttribute("menuList");
                                 MenuDTO mdto = null;    
                                 if (cart == null || cart.isEmpty()) {
                                 %>
-
                                 <%
                                 } else {
                                     int index = 0;
@@ -114,86 +111,72 @@
                                                 break;
                                             };
                                         }
-                                        
                                 %>
-
                                 <tr>
                                     <th scope="row">
                                         <div class="d-flex align-items-center">
-                                            <img src="<%=mdto.getImage()%>" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="" alt="">
+                                            <img src="<%=mdto.getImage()%>" class="img-fluid me-5 rounded-circle" style="width: 80px; height: 80px;" alt="">
                                         </div>
                                     </th>
                                     <td>
-                                        <!-- Name -->
                                         <p class="mb-0 mt-4"><%=mdto.getFood()%></p>
                                     </td>
                                     <td>
-                                        <!-- Price -->
                                         <p class="mb-0 mt-4"><%=mdto.getPrice()%> VND</p>
                                     </td>
                                     <td>
                                         <div class="input-group quantity mt-4" style="width: 100px;">
-                                            <div class="input-group-btn">
-
-                                            </div>
                                             <input name="quantity<%=item.getMenu_ID()%>" type="text" class="form-control form-control-sm text-center border-0" value="<%=item.getQuantity()%>">
-                                            <div class="input-group-btn">
-
-                                            </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <!--Sum Price -->
                                         <p class="mb-0 mt-4"><%=mdto.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()))%>VND</p>
                                     </td>
                                     <td>
-                                        <button class="btn btn-md rounded-circle bg-light border mt-4" >
-                                            <i class="fa fa-times text-danger"></i>
-                                        </button>
+                                        <!-- Fixed: Use a link instead of nested form -->
+                                        <a href="CartController?action=removeFromCart&menuId=<%=item.getMenu_ID()%>" 
+                                           class="btn btn-danger btn-sm" 
+                                           onclick="return confirm('Are you sure you want to remove this item?')">Delete</a>
                                     </td>
                                 </tr>
-                                <!-- END OF A ROW-->
-                                <%}%>
-
+                                <%
+                                    index++;
+                                    }
+                                %>
                             </tbody>
-
                         </table>
-
-                </div>
-                <div class="mt-5">
-
-                    <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="submit">Update Cart</button>
-
-                </div>
-                </form>
-                <%}%>
-                <div class="row g-4 justify-content-end">
-                    <div class="col-8"></div>
-                    <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
-                        <div class="bg-light rounded">
-                            <div class="p-4">
-                                <h1 class="display-6 mb-4">Cart <span class="fw-normal">Total</span></h1>
+                        <div class="mt-5">
+                            <button class="btn border-secondary rounded-pill px-4 py-3 text-primary" type="submit">Update Cart</button>
+                        </div>
+                    </form>
+                    <%}%>
+                    <div class="row g-4 justify-content-end">
+                        <div class="col-8"></div>
+                        <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
+                            <div class="bg-light rounded">
+                                <div class="p-4">
+                                    <h1 class="display-6 mb-4">Cart <span class="fw-normal">Total</span></h1>
+                                </div>
+                                <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
+                                    <h5 class="mb-0 ps-4 me-4">Total</h5>
+                                    <p class="mb-0 pe-4"><%=(BigDecimal)request.getSession().getAttribute("cartSum")%></p>
+                                </div>
+                                <form action="MainController" method="post">
+                                    <input type="hidden" name="action" value="checkOut">
+                                    <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="submit">
+                                        Proceed Checkout
+                                    </button>
+                                </form>
                             </div>
-                            <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
-                                <h5 class="mb-0 ps-4 me-4">Total</h5>
-                                <p class="mb-0 pe-4"><%=(BigDecimal)request.getSession().getAttribute("cartSum")%></p>
-                            </div>
-                            <form action="MainController" method="post">
-                                <input type="hidden" name="action" value="checkOut">
-                                <button class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4" type="submit">
-                                    Proceed Checkout
-                                </button>
-                            </form>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Cart Page End -->
+            <!-- Cart Page End -->
 
 
-        <%@include file="Footer.jsp" %>
+            <%@include file="Footer.jsp" %>
 
     </body>
 
