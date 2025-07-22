@@ -48,10 +48,10 @@ CREATE TABLE [Order] (
     Address NVARCHAR(500) COLLATE Vietnamese_CI_AS,
     Phone NVARCHAR(20),
     Email NVARCHAR(255),
-    Payment_ID INT,
+    Payment_Method NVARCHAR(100), -- Replaces Payment_ID
     Note TEXT,
-    FOREIGN KEY (User_ID) REFERENCES [User](User_ID),
-    FOREIGN KEY (Payment_ID) REFERENCES [Payment](Payment_ID)
+    Status VARCHAR(50), -- E.g., 'pending', 'completed', 'failed'
+    FOREIGN KEY (User_ID) REFERENCES [User](User_ID)
 );
 
 -- 6. Bảng Category
@@ -71,15 +71,18 @@ CREATE TABLE [Menu] (
     FOREIGN KEY (Category_ID) REFERENCES [Category](Category_ID)
 );
 -- 8. Bảng Order_Item
-CREATE TABLE [Order_Item] (
+CREATE TABLE Order_Item (
     Order_ID INT,
     Menu_ID INT,
-    Order_quantity INT,
-    Order_price_time DATE,
+    Quantity INT,
+    Order_Time DATE,
+    Price DECIMAL(10, 2), -- price at the time of purchase
+
     PRIMARY KEY (Order_ID, Menu_ID),
     FOREIGN KEY (Order_ID) REFERENCES [Order](Order_ID),
-    FOREIGN KEY (Menu_ID) REFERENCES [Menu](Menu_ID)
+    FOREIGN KEY (Menu_ID) REFERENCES Menu(Menu_ID)
 );
+
 -- 10. Bảng Cart_Item
 CREATE TABLE [Cart] (
     User_ID INT,
@@ -144,31 +147,25 @@ VALUES
 (4, 3, 1),  -- customer2 has 1 pho bo
 (4, 9, 2);  -- customer2 has 2 che khuc bach
 
--- Insert sample data into Payment table
-INSERT INTO [Payment] (Payment_code, Payment_date, Payment_status, User_ID , Payment_method)
-VALUES 
-('PAY001', '2023-10-01', 'Success', 3 , 'cod'),
-('PAY002', '2023-10-02', 'Success', 4 , 'vietqr'),
-('PAY003', '2023-10-03', 'Fail', 3, 'vietqr');
-
 -- Insert sample data into Order table
 INSERT INTO [Order] 
-(Order_time, User_ID, Payment_ID, Address, FullName, Phone, Email, Note)
+(Order_time, User_ID, Payment_Method, Address, FullName, Phone, Email, Note, Status)
 VALUES 
-('2023-10-01', 3, 1, N'789 Đường Cách Mạng Tháng 8, Q3, TP.HCM', N'Nguyễn Văn A', '0909123456', 'vana@example.com', N'Giao buổi sáng'),
-('2023-10-02', 4, 2, N'111, Lê Văn Việt, Thủ Đức', N'Trần Thị B', '0911234567', 'thib@example.com', N'Gọi trước khi giao'),
-('2023-10-03', 3, 3, N'314, Đường D, Hà Nội', N'Lê Văn C', '0922345678', 'levanc@example.com', N'Thanh toán thất bại');
+('2023-10-01', 3, 'vietqr', N'789 Đường Cách Mạng Tháng 8, Q3, TP.HCM', N'Nguyễn Văn A', '0909123456', 'vana@example.com', N'Giao buổi sáng', 'completed'),
+('2023-10-02', 4, 'cod', N'111, Lê Văn Việt, Thủ Đức', N'Trần Thị B', '0911234567', 'thib@example.com', N'Gọi trước khi giao', 'pending'),
+('2023-10-03', 3, 'vietqr', N'Địa chỉ ảo', N'Tên người dùng', '0909123456', 'user@example.com', N'Ghi chú test', 'failed');
 
 
 
--- Insert sample data into Order_Item table
-INSERT INTO [Order_Item] (Order_ID, Menu_ID, Order_quantity, Order_price_time)
+-- Insert sample data into Order_Item table with price included
+INSERT INTO [Order_Item] (Order_ID, Menu_ID, Quantity, Order_Time, Price)
 VALUES 
-(1, 1, 1, '2023-10-01'),  -- Order 1: 1 com tam
-(1, 4, 2, '2023-10-01'),  -- Order 1: 2 banh mi
-(2, 3, 1, '2023-10-02'),  -- Order 2: 1 pho bo
-(2, 7, 1, '2023-10-02'),  -- Order 2: 1 tra dao
-(3, 2, 2, '2023-10-03');  -- Order 3: 2 com ga (failed payment)
+(1, 1, 1, '2023-10-01', 45000.00),  -- Cơm tấm
+(1, 4, 2, '2023-10-01', 25000.00),  -- Bánh mì
+(2, 3, 1, '2023-10-02', 50000.00),  -- Phở bò
+(2, 7, 1, '2023-10-02', 20000.00),  -- Trà đào
+(3, 2, 2, '2023-10-03', 40000.00);  -- Cơm gà
+
 
 -- Insert sample data into Feedback table
 INSERT INTO [Feedback] (Rating, Comment, User_ID, Menu_ID)

@@ -61,7 +61,10 @@ public class MainController extends HttpServlet {
     private boolean isPaymentAction(String action) {
         return "createPay".equals(action);
     }
-
+    private boolean isOrderAction(String action) {
+        return "viewOrders".equals(action)
+                || "viewOrderDetail".equals(action);
+    }
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -86,6 +89,8 @@ public class MainController extends HttpServlet {
                     url = "/FeedbackController";
                 } else if (isPaymentAction(action)) {
                     url = "/PaymentController";
+                } else if (isOrderAction(action)) {
+                    url = "/OrderController";
                 }
                 else {
                     url = "/DefaultController";
@@ -95,6 +100,7 @@ public class MainController extends HttpServlet {
                 }
 
         } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             request.getRequestDispatcher(url).forward(request, response);
         }

@@ -291,21 +291,21 @@ public class MenuDAO {
 
         return menus;
     }
- 
+
     public List<MenuDTO> getMenusByCategoryAndKeyword(int categoryId, String keyword) {
         List<MenuDTO> menus = new ArrayList<>();
         Connection conn = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
         String query = GET_ALL_MENUS + " WHERE category_id = ? AND food LIKE ?";
-        
+
         try {
             conn = DbUtils.getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, categoryId);
             ps.setString(2, "%" + keyword + "%");
             rs = ps.executeQuery();
-            
+
             while (rs.next()) {
                 MenuDTO menu = new MenuDTO();
                 menu.setMenu_id(rs.getInt("menu_id"));
@@ -323,7 +323,44 @@ public class MenuDAO {
         } finally {
             closeResources(conn, ps, rs);
         }
-        
         return menus;
     }
+
+    public List<MenuDTO> searchByName(String keyword) {
+        List<MenuDTO> resultList = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        String query = "SELECT menu_id, food, image, price, food_description, food_status, category_id "
+                + "FROM [Menu] WHERE food LIKE ?";
+
+        try {
+            conn = DbUtils.getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, "%" + keyword + "%");
+            rs = ps.executeQuery();
+
+            while (rs.next()) {
+                MenuDTO menu = new MenuDTO();
+                menu.setMenu_id(rs.getInt("menu_id"));
+                menu.setFood(rs.getString("food"));
+                menu.setImage(rs.getString("image"));
+                menu.setPrice(rs.getBigDecimal("price"));
+                menu.setFood_description(rs.getString("food_description"));
+                menu.setFood_status(rs.getString("food_status"));
+                menu.setCategory_id(rs.getInt("category_id"));
+
+                resultList.add(menu);
+            }
+        } catch (Exception e) {
+            System.err.println("Error in searchByName(): " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, ps, rs);
+        }
+        
+        return resultList;
+    }
+
 }

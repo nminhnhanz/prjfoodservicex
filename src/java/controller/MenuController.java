@@ -17,7 +17,7 @@ import model.dao.MenuDAO;
 import model.dto.CategoryDTO;
 import model.dto.MenuDTO;
 import utils.AuthUtils;
-import utils.ConstPaths;
+import utils.CONSTANT;
 @WebServlet(name = "MenuController", urlPatterns = {"/MenuController"})
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024, // 1MB
@@ -45,7 +45,7 @@ public class MenuController extends HttpServlet {
                 request.getContentType().toLowerCase().startsWith("multipart/")) {
                 action = getPartValue(request, "action");
             }
-
+            System.out.println(">>> MenuController: action = " + action);
             if ("addMenu".equals(action)) {
                 url = MenuAddingCenter(request, response);
             } else if ("searchMenu".equals(action)) {
@@ -131,11 +131,11 @@ public class MenuController extends HttpServlet {
         }
 
         List<CategoryDTO> categories = cdao.getAllCategories();
-        request.setAttribute("list", list);
-        request.setAttribute("categories", categories);
+        request.setAttribute("menuList", list);
+        request.setAttribute("categoryList", categories);
         request.setAttribute("keyword", keyword);
         request.setAttribute("selectedCategoryId", categoryId);
-        return "welcome.jsp";
+        return "shop.jsp";
     }
 
     private String MenuAddingCenter(HttpServletRequest request, HttpServletResponse response)
@@ -231,7 +231,7 @@ System.out.println("Parsed Category ID: " + category_id_value);
             Part imagePart = request.getPart("FoodImage");
             String fileName = Paths.get(imagePart.getSubmittedFileName()).getFileName().toString();
             if (fileName != null && !fileName.isEmpty()) {
-                String uploadPath = utils.ConstPaths.savedFoodImagePath;
+                String uploadPath = utils.CONSTANT.savedFoodImagePath;
                 new File(uploadPath).mkdirs();
                 File file = new File(uploadPath, fileName);
                 imagePart.write(file.getAbsolutePath());
