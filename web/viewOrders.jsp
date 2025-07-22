@@ -99,9 +99,10 @@
             </form>
 
             <!-- Search by Order ID (manager only) -->
-            <% if (user != null && "manager".equalsIgnoreCase(user.getRole())) { %>
-            <form method="get" action="OrderController">
-                <input type="hidden" name="action" value="search"/>
+            <% if (user != null && ("manager".equalsIgnoreCase(user.getRole()) 
+                                 || "admin".equalsIgnoreCase(user.getRole()))) { %>
+                                 <form method="get" action="MainController">
+                <input type="hidden" name="action" value="searchOrders"/>
                 <label for="searchOrderID">Search by Order ID:</label>
                 <input type="text" id="searchOrderID" name="searchOrderID" placeholder="Enter Order ID"
                        value="<%= (searchOrderId != null) ? searchOrderId : "" %>" />
@@ -120,7 +121,8 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Phone</th>
-                        <% if (user != null && "manager".equalsIgnoreCase(user.getRole())) { %>
+                        <% if (user != null && ("manager".equalsIgnoreCase(user.getRole())
+                                            || "admin".equalsIgnoreCase(user.getRole()))) { %>
                     <th>User ID</th>
                     <th>Manager Actions</th>
                         <% } %>
@@ -141,7 +143,8 @@
                     <td><%= order.getFullName() %></td>
                     <td><%= order.getEmail() %></td>
                     <td><%= order.getPhone() %></td>
-                    <% if (user != null && "manager".equalsIgnoreCase(user.getRole())) { %>
+                    <% if (user != null && ("manager".equalsIgnoreCase(user.getRole())
+                                        || "admin".equalsIgnoreCase(user.getRole()))) { %>
                     <td><%= order.getUser_ID() %></td>
                     <td>
                         <% if ("pending".equalsIgnoreCase(order.getStatus())) { %>
