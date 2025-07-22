@@ -14,7 +14,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <title>Fruitables - Vegetable Website Template</title>
+        <title>Foodwebapp</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -31,7 +31,7 @@
         <!-- Fruits Shop Start -->
         <div class="container-fluid fruite py-5">
             <div class="container py-5">
-                <h1 class="mb-4">Fresh fruits shop</h1>
+                <h1 class="mb-4">Food</h1>
                 <div class="row g-4">
                     <div class="col-lg-12">
                         <div class="row g-4">
@@ -68,13 +68,12 @@
                                             <div class="fruite-img">
                                                 <img src="<%= product.getImage() %>" class="img-fluid w-100 rounded-top" alt="">
                                             </div>
-                                            <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">Fruits</div>
                                             <div class="p-4 border border-secondary border-top-0 rounded-bottom">
                                                 <h4><%= product.getFood() %></h4>
                                                 <p><%= product.getFood_description() %></p>
                                                 <div class="d-flex justify-content-between flex-lg-wrap">
                                                     <p class="text-dark fs-5 fw-bold mb-0"><%= product.getPrice() %> VND / unit</p>
-                                                    <a href="CartController?action=addToCart&id=<%= product.getMenu_id() %>" 
+                                                    <a href="MainController?action=addToCart&from=MenuController?action=searchMenu&menuId=<%= product.getMenu_id() %>" 
                                                        class="btn border border-secondary rounded-pill px-3 text-primary">
                                                         <i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart
                                                     </a>

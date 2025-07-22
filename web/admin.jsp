@@ -139,9 +139,7 @@
             <div class="navbar-nav ms-auto">
                 <% if(AuthUtils.isLoggedIn(request)){ %>
                     <!-- 4. SEE YOUR CART -->
-                    <a class="nav-link btn btn-outline-light me-2 d-flex align-items-center" href="cart.jsp">
-                        <i class="fas fa-shopping-cart me-1"></i> Cart
-                    </a>
+                
                     <a class="nav-link d-flex align-items-center" href="MainController?action=logout">
                         <i class="fas fa-sign-out-alt me-1"></i> Logout
                     </a>

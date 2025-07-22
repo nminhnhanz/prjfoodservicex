@@ -8,6 +8,7 @@ import model.dto.MenuDTO;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import utils.DbUtils;
@@ -20,7 +21,7 @@ public class MenuDAO {
 
     private static final String GET_ALL_MENUS = "SELECT menu_id, food, image, price, food_description, food_status, category_id FROM [Menu]";
     private static final String GET_MENU_BY_ID = "SELECT menu_id, food, image, price, food_description, food_status, category_id FROM [Menu] WHERE menu_id = ?";
-    private static final String CREATE_MENU = "INSERT INTO [Menu](menu_id, food, image, price, food_description, food_status, category_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
+    private static final String CREATE_MENU = "INSERT INTO [Menu](food, image, price, food_description, food_status, category_id) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_MENU = "UPDATE [Menu] SET food = ?, image= ?, price = ?, food_description = ?,  food_status = ?, category_id = ? WHERE menu_id = ?";
     private static final String DELETE_MENU = "DELETE FROM [Menu] WHERE menu_id = ?";
 
@@ -96,15 +97,14 @@ public class MenuDAO {
 
         try {
             conn = DbUtils.getConnection();
-            ps = conn.prepareStatement(CREATE_MENU);
+            ps = conn.prepareStatement(CREATE_MENU, Statement.RETURN_GENERATED_KEYS);
 
-            ps.setInt(1, menu.getMenu_id());
-            ps.setString(2, menu.getFood());
-            ps.setString(3, menu.getImage());
-            ps.setBigDecimal(4, menu.getPrice());
-            ps.setString(5, menu.getFood_description());
-            ps.setString(6, menu.getFood_status());
-            ps.setInt(7, menu.getCategory_id());
+            ps.setString(1, menu.getFood());
+            ps.setString(2, menu.getImage());
+            ps.setBigDecimal(3, menu.getPrice());
+            ps.setString(4, menu.getFood_description());
+            ps.setString(5, menu.getFood_status());
+            ps.setInt(6, menu.getCategory_id());
 
             int rowsAffected = ps.executeUpdate();
             success = (rowsAffected > 0);
@@ -359,7 +359,7 @@ public class MenuDAO {
         } finally {
             closeResources(conn, ps, rs);
         }
-        
+
         return resultList;
     }
 

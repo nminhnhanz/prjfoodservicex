@@ -98,7 +98,7 @@ public class MainController extends HttpServlet {
                     url = "/DefaultController";
                 }
             }else {
-                    url = "/DefaultControllfver";
+                    url = "/DefaultController";
                 }
 
         } catch (Exception e) {
