@@ -58,7 +58,7 @@ public class OrderController extends HttpServlet {
             response.sendRedirect("MainController?action=viewOrders");
         }
     }
-
+    
     private String handleViewOrders(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException, SQLException {
         HttpSession session = request.getSession();
@@ -73,13 +73,15 @@ public class OrderController extends HttpServlet {
         List<OrderDTO> orders;
 
         if (status != null && !status.isEmpty()) {
-            if ("manager".equalsIgnoreCase(user.getRole())) {
+            if ("manager".equalsIgnoreCase(user.getRole())
+            || "admin".equalsIgnoreCase(user.getRole())) {
                 orders = oDAO.getOrdersByStatus(status);
             } else {
                 orders = oDAO.getOrdersByUserAndStatus(user.getUser_ID(), status);
             }
         } else {
-            if ("manager".equalsIgnoreCase(user.getRole())) {
+            if ("manager".equalsIgnoreCase(user.getRole())
+            || "admin".equalsIgnoreCase(user.getRole())) {
                 orders = oDAO.getAllOrders();
             } else {
                 orders = oDAO.getOrdersByUser(user.getUser_ID());
@@ -153,7 +155,8 @@ public class OrderController extends HttpServlet {
 
             OrderDTO order = oDAO.getOrderByID(orderId);
             if (order != null) {
-                if ("manager".equalsIgnoreCase(user.getRole()) || order.getUser_ID() == user.getUser_ID()) {
+                if ("manager".equalsIgnoreCase(user.getRole()) || order.getUser_ID() == user.getUser_ID()
+                || "admin".equalsIgnoreCase(user.getRole())) {
                     orders = Arrays.asList(order);
                 } else {
                     orders = Arrays.asList();
@@ -175,7 +178,8 @@ public class OrderController extends HttpServlet {
         HttpSession session = request.getSession();
         UserDTO user = (UserDTO) session.getAttribute("user");
 
-        if (user == null || !"manager".equalsIgnoreCase(user.getRole())) {
+        if (user == null || !"manager".equalsIgnoreCase(user.getRole())
+                        || "admin".equalsIgnoreCase(user.getRole())) {
             response.sendRedirect("login.jsp");
             return null;
         }
