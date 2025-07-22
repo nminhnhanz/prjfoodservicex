@@ -63,7 +63,9 @@ public class MainController extends HttpServlet {
     }
     private boolean isOrderAction(String action) {
         return "viewOrders".equals(action)
-                || "viewOrderDetail".equals(action);
+                || "viewOrderDetail".equals(action)
+                || "searchOrders".equals(action)
+                || "cancelOrder".equals(action);
     }
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -96,7 +98,7 @@ public class MainController extends HttpServlet {
                     url = "/DefaultController";
                 }
             }else {
-                    url = "/DefaultController";
+                    url = "/DefaultControllfver";
                 }
 
         } catch (Exception e) {

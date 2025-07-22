@@ -99,13 +99,18 @@ public class UserController extends HttpServlet {
         String password = request.getParameter("password");
         UserDAO userdao = new UserDAO();
         CartDAO cDAO = new CartDAO();
-
+        
         if (userdao.login(user_name, password)) {
             url = "/DefaultController";
             UserDTO user = userdao.getUserByName(user_name);
             List<CartDTO> cartList = cDAO.getCartByUserID(user.getUser_ID());
             if (cartList == null) {
                 cartList = new ArrayList<>();
+            }
+            System.out.println(user.getRole());
+            if (user.getRole().equalsIgnoreCase("admin")){
+                url = "admin.jsp";
+                
             }
             session.setAttribute("user", user);
             session.setAttribute("cart", cartList);
@@ -115,6 +120,7 @@ public class UserController extends HttpServlet {
             request.setAttribute("message", "UserName or Password incorrect!");
 
         }
+        
         return url;
     }
 

@@ -109,7 +109,7 @@ public class MenuController extends HttpServlet {
         request.setAttribute("categories", categories);
         request.setAttribute("keyword", "");
         request.setAttribute("selectedCategoryId", "");
-        return "welcome.jsp";
+        return "admin.jsp";
     }
 
     private String MenuSearchingCenter(HttpServletRequest request, HttpServletResponse response) {

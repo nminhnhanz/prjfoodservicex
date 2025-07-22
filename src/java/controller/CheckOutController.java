@@ -103,7 +103,7 @@ public class CheckOutController extends HttpServlet {
                 MenuDTO menu = mdao.getMenuByID(menuID);
                 BigDecimal price = (menu != null) ? menu.getPrice() : BigDecimal.ZERO;
                 totalPrice = totalPrice.add(price.multiply(BigDecimal.valueOf(quantity)));
-                boolean inserted = odao.insertOrderItem(orderID, menuID, quantity, orderTime);
+                boolean inserted = odao.insertOrderItem(orderID, menuID, quantity, orderTime,price);
                 if (!inserted) {
                     System.out.println("Failed to insert item: " + menuID);
                 }

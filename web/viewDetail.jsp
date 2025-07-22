@@ -29,7 +29,6 @@
             String cardNumber = CONSTANT.RECEIVER_CARD_NUMBER;
             String accountName = CONSTANT.RECEIVER_ACCOUNT_NAME;
         %>
-
         <div class="container mt-5 mb-5">
             <div class="card shadow rounded-4 p-4">
                 <h2 class="mb-3">Chi tiết đơn hàng</h2>
@@ -93,7 +92,7 @@
                         <li><strong>Số tài khoản:</strong> <%= cardNumber %></li>
                         <li><strong>Tên người nhận:</strong> <%= accountName %></li>
                         <li><strong>Nội dung chuyển khoản:</strong> Thanh toán đơn hàng #<%= order.getOrder_ID() %></li>
-                        <li><img src="<%= PaymentAPI.getVQR(bankCode, cardNumber, accountName, totalPrice, String.format(CONSTANT.PAYMENT_NOTE_FORMAT, order.getOrder_ID())) %>" alt="Mã VietQR"></li>
+                        <li><img width="500" height="500" src="<%= PaymentAPI.getVQR(bankCode, cardNumber, accountName, totalPrice, String.format(CONSTANT.PAYMENT_NOTE_FORMAT, order.getOrder_ID())) %>" alt="Mã VietQR"></li>
                     </ul>
                 </div>
                 <% } else { %>
@@ -103,7 +102,7 @@
                 </div>
                 <% } %>
 
-                <a href="MainController" class="btn btn-primary mt-3">Quay lại</a>
+                <a href="MainController?action=viewOrders" class="btn btn-primary mt-3">Quay lại</a>
             </div>
         </div>
 

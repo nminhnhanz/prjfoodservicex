@@ -61,7 +61,7 @@
                         <li><strong>Số tài khoản:</strong> <%= cardNumber %></li>
                         <li><strong>Tên người nhận:</strong> <%= accountName %></li>
                         <li><strong>Nội dung chuyển khoản:</strong> Thanh toán đơn hàng #<%= orderID %></li>
-                        <li><img src="<%=PaymentAPI.getVQR(bankCode,cardNumber,accountName,totalPrice,String.format(CONSTANT.PAYMENT_NOTE_FORMAT,orderID))%>"></li>
+                        <li><img width="500" height="500" src="<%=PaymentAPI.getVQR(bankCode,cardNumber,accountName,totalPrice,String.format(CONSTANT.PAYMENT_NOTE_FORMAT,orderID))%>"></li>
                     </ul>
                 </div>
                 <% } else { %>

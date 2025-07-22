@@ -26,7 +26,7 @@ public class OrderDAO {
             = "DELETE FROM [Order] WHERE order_ID = ?";
 
     private static final String INSERT_ORDER_ITEM
-            = "INSERT INTO Order_Item (Order_ID, Menu_ID, Quantity, Order_Time) VALUES (?, ?, ?, ?)";
+            = "INSERT INTO Order_Item (Order_ID, Menu_ID, Quantity, Order_Time, Price) VALUES (?, ?, ?, ?, ?)";
 
     public List<OrderDTO> getAllOrders() {
         List<OrderDTO> orders = new ArrayList<>();
@@ -116,14 +116,14 @@ public class OrderDAO {
         return success;
     }
 
-    public boolean insertOrderItem(int orderID, int menuID, int quantity, Date orderTime) {
+    public boolean insertOrderItem(int orderID, int menuID, int quantity, Date orderTime, BigDecimal price) {
         try ( Connection conn = DbUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(INSERT_ORDER_ITEM)) {
 
             ps.setInt(1, orderID);
             ps.setInt(2, menuID);
             ps.setInt(3, quantity);
             ps.setDate(4, orderTime);
-
+            ps.setBigDecimal(5, price);
             return ps.executeUpdate() > 0;
         } catch (Exception e) {
             System.err.println("Error in insertOrderItem(): " + e.getMessage());
@@ -263,9 +263,9 @@ public class OrderDAO {
 
     public BigDecimal getTotalPriceForOrder(int orderID) throws SQLException, ClassNotFoundException {
         String sql = "SELECT SUM(m.Price * oi.Quantity) "
-               + "FROM Order_Item oi "
-               + "JOIN Menu m ON oi.Menu_ID = m.Menu_ID "
-               + "WHERE oi.Order_ID = ?";
+                + "FROM Order_Item oi "
+                + "JOIN Menu m ON oi.Menu_ID = m.Menu_ID "
+                + "WHERE oi.Order_ID = ?";
 
         try ( Connection conn = DbUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -280,9 +280,23 @@ public class OrderDAO {
         return BigDecimal.ZERO;
     }
 
-    
-
     public boolean isOrderExists(int id) {
         return getOrderByID(id) != null;
     }
+
+    public boolean updateStatus(int orderID, String status) {
+        String sql = "UPDATE [Order] SET Status = ? WHERE Order_ID = ?";
+        try ( Connection conn = DbUtils.getConnection();  PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, status);
+            ps.setInt(2, orderID);
+            return ps.executeUpdate() > 0;
+
+        } catch (Exception e) {
+            System.err.println("Error in updateStatus(): " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }
