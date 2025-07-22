@@ -8,8 +8,8 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
-import model.UserDAO;
-import model.UserDTO;
+import model.dao.UserDAO;
+import model.dto.UserDTO;
 
 /**
  *
@@ -51,10 +51,6 @@ public class PasswordUtils {
     
     public static void main(String[] args) {
         //System.out.println(encryptSHA256("12345678"));
-        UserDAO udao = new UserDAO();
-        List<UserDTO> list = udao.getAllUsers();
-        for (UserDTO u : list) {
-            udao.updatePassword(u.getUserID(), encryptSHA256(u.getPassword()));
-        }
+       
     }
 }
