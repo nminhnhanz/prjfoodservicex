@@ -49,10 +49,10 @@ public class CartController extends HttpServlet {
             } else if ("clearCart".equals(action)) {
                 url = clearCart(request, response);
                 return;
-            } else if ("updateCart".equals(action)){
-                url = updateCart(request,response);
-            } else if ("addToCart".equals(action)){
-                url = addToCart(request,response);
+            } else if ("updateCart".equals(action)) {
+                url = updateCart(request, response);
+            } else if ("addToCart".equals(action)) {
+                url = addToCart(request, response);
             }
 
         } catch (Exception e) {
@@ -100,28 +100,51 @@ public class CartController extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
+
     private String addToCart(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
 
         int menuId = Integer.parseInt(request.getParameter("menuId"));
         String from = request.getParameter("from");
         List<CartDTO> cartList = cDAO.getCartByUserID(currentUser.getUser_ID());
-        for (CartDTO c : cartList){
-            if(c.getMenu_ID() == menuId){
+        for (CartDTO c : cartList) {
+            if (c.getMenu_ID() == menuId) {
                 cDAO.updateCartQuantity(currentUser.getUser_ID(),
-                                        menuId,
-                                        c.getQuantity() + 1);
+                        menuId,
+                        c.getQuantity() + 1);
                 session.setAttribute("cart", cartList);
                 return from;
             }
         }
-        cDAO.addToCart(new CartDTO(currentUser.getUser_ID(),menuId,1));
-       session.setAttribute("cart", cartList);
+        cDAO.addToCart(new CartDTO(currentUser.getUser_ID(), menuId, 1));
+        session.setAttribute("cart", cartList);
 
         return from;
     }
+
     private String removeItem(HttpServletRequest request, HttpServletResponse response) {
-        
+        HttpSession session = request.getSession();
+
+        // Get menuId from request parameter
+        String menuIdParam = request.getParameter("menuId");
+        if (menuIdParam != null) {
+            int menuId = Integer.parseInt(menuIdParam);
+
+            // Remove item from database using your existing method
+            boolean success = cDAO.deleteCartItem(currentUser.getUser_ID(), menuId);
+
+            if (success) {
+                System.out.println("Successfully removed item with menuId: " + menuId);
+            } else {
+                System.out.println("Failed to remove item with menuId: " + menuId);
+            }
+
+            // Update session cart after deletion
+            session.setAttribute("cart", cDAO.getCartByUserID(currentUser.getUser_ID()));
+            request.setAttribute("menuList", mDAO.getAllMenus());
+            session.setAttribute("cartSum", calCartSum(currentUser.getUser_ID()));
+        }
+
         return "cart.jsp";
     }
 
@@ -132,7 +155,7 @@ public class CartController extends HttpServlet {
     private String getCart(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         session.setAttribute("cart", cDAO.getCartByUserID(currentUser.getUser_ID()));
-        
+
         request.setAttribute("menuList", mDAO.getAllMenus());
         session.setAttribute("cartSum", calCartSum(currentUser.getUser_ID()));
         return "cart.jsp";
@@ -141,20 +164,21 @@ public class CartController extends HttpServlet {
     private String updateCart(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         int UserID = currentUser.getUser_ID();
-        for (CartDTO c : cDAO.getCartByUserID(UserID)){
-            int newQuantity = Integer.parseInt(request.getParameter("quantity"+String.valueOf(c.getMenu_ID())));
+        for (CartDTO c : cDAO.getCartByUserID(UserID)) {
+            int newQuantity = Integer.parseInt(request.getParameter("quantity" + String.valueOf(c.getMenu_ID())));
             cDAO.updateCartQuantity(UserID, c.getMenu_ID(), newQuantity);
-            
+
             System.out.println(newQuantity);
-        }   
-        
+        }
+
         session.setAttribute("cart", cDAO.getCartByUserID(UserID));
         request.setAttribute("menuList", mDAO.getAllMenus());
         session.setAttribute("cartSum", calCartSum(currentUser.getUser_ID()));
 
         return "cart.jsp";
     }
-    private BigDecimal calCartSum(int UserID){
+
+    private BigDecimal calCartSum(int UserID) {
         BigDecimal sum = BigDecimal.ZERO;
         List<CartDTO> cartItemList = (List<CartDTO>) cDAO.getCartByUserID(UserID);
         List<MenuDTO> menuList = (List<MenuDTO>) mDAO.getAllMenus();
@@ -164,6 +188,5 @@ public class CartController extends HttpServlet {
         }
         return sum;
     }
-    
 
 }
